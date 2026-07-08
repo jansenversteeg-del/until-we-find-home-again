@@ -1,10 +1,5 @@
-Project starter untuk 'Until We Find Home Again'.
-
-Ini adalah fondasi awal.
-Pada tahap berikutnya akan ditambahkan:
-- galeri foto
-- animasi
-- musik
-- Cantik & Mitchy
-- QR flow
-- responsive premium
+V0.3
+Langkah berikutnya:
+1. Upload semua file ini menggantikan file lama.
+2. Folder assets/images sudah disiapkan.
+3. Pada V0.4 hero akan menggunakan foto asli kalian (hero.jpg).

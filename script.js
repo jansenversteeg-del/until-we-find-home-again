@@ -1,1 +1,1 @@
-window.onload=()=>setTimeout(()=>{loader.style.opacity=0;setTimeout(()=>loader.style.display="none",700)},1200);
+window.addEventListener('load',()=>{setTimeout(()=>{loader.style.opacity='0';setTimeout(()=>loader.style.display='none',700)},1200)});
