@@ -1,1 +1,1 @@
-function startStory(){document.querySelector('.hero').style.display='none';document.getElementById('story').classList.remove('hidden');window.scrollTo(0,0);}
+window.onload=()=>setTimeout(()=>{loader.style.opacity=0;setTimeout(()=>loader.style.display="none",700)},1200);

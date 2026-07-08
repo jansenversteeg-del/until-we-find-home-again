@@ -1,5 +1,1 @@
-body{margin:0;font-family:Arial,sans-serif;background:#f8f5f1;color:#3b342e}
-.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px}
-button{padding:14px 28px;border:none;border-radius:30px;background:#b88a5a;color:#fff;font-size:16px;cursor:pointer}
-#story{max-width:800px;margin:auto;padding:40px 24px;line-height:1.8}
-.hidden{display:none}
+html{scroll-behavior:smooth}body{margin:0;font-family:Inter,sans-serif;background:#f8f5f1;color:#43372e}#loader{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:#f8f5f1;transition:.7s}.card{background:#fff;padding:30px;border-radius:18px;box-shadow:0 15px 40px rgba(0,0,0,.08)}.hero{height:100vh;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url(https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=1400&q=80) center/cover;display:flex;justify-content:center;align-items:center;text-align:center;color:#fff}.hero-content{max-width:700px;padding:20px}h1{font-family:"Cormorant Garamond",serif;font-size:62px}.section{padding:90px 10%}.alt{background:#fff}.btn{display:inline-block;margin-top:20px;padding:14px 28px;border-radius:999px;background:#b98257;color:#fff;text-decoration:none}
