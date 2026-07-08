@@ -1,158 +1,50 @@
-/* ============================================
-   BUILD 2
-   UNTIL WE FIND HOME AGAIN
-============================================ */
+/* BUILD 3 PART 1C */
 
-window.addEventListener("load", () => {
-
-    // =========================================
-    // Loader
-    // =========================================
-
-    const loader = document.getElementById("loader");
-
-    setTimeout(() => {
-
-        loader.style.opacity = "0";
-
-        setTimeout(() => {
-
-            loader.style.display = "none";
-
-        }, 800);
-
-    }, 1800);
-
+window.addEventListener("load",()=>{
+ const loader=document.getElementById("loader");
+ setTimeout(()=>{
+   loader.style.opacity="0";
+   setTimeout(()=>loader.style.display="none",800);
+ },1400);
 });
 
+// Ken Burns hero
+const bg=document.querySelector(".hero-background");
+let scale=1.08;
+function animateHero(){
+  scale+=0.00008;
+  if(bg){bg.style.transform=`scale(${scale})`;}
+  requestAnimationFrame(animateHero);
+}
+if(bg){requestAnimationFrame(animateHero);}
 
-// =========================================
-// Scroll Reveal
-// =========================================
-
-const observer = new IntersectionObserver((entries)=>{
-
-    entries.forEach(entry=>{
-
-        if(entry.isIntersecting){
-
-            entry.target.classList.add("show");
-
-        }
-
-    });
-
-},{
-    threshold:.15
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+ a.addEventListener("click",e=>{
+   e.preventDefault();
+   document.querySelector(a.getAttribute("href"))
+     ?.scrollIntoView({behavior:"smooth"});
+ });
 });
 
+// Reveal animation
+const io=new IntersectionObserver(entries=>{
+ entries.forEach(entry=>{
+   if(entry.isIntersecting){
+     entry.target.classList.add("show");
+   }
+ });
+},{threshold:0.15});
 
-document.querySelectorAll(
-`
-.intro,
-.timeline-item,
-.coming-soon
-`
-).forEach(section=>{
-
-    section.classList.add("fade-up");
-
-    observer.observe(section);
-
+document.querySelectorAll(".intro,.timeline-item,.coming-soon").forEach(el=>{
+ el.classList.add("fade-up");
+ io.observe(el);
 });
 
-
-// =========================================
-// Ken Burns Effect
-// =========================================
-
-const hero = document.querySelector(".hero");
-
-let zoom = 100;
-
-setInterval(()=>{
-
-    zoom += 0.01;
-
-    hero.style.backgroundSize = zoom + "%";
-
-},40);
-
-
-// =========================================
-// Smooth Scroll
-// =========================================
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
-
-    anchor.addEventListener("click",function(e){
-
-        e.preventDefault();
-
-        const target=document.querySelector(this.getAttribute("href"));
-
-        target.scrollIntoView({
-
-            behavior:"smooth"
-
-        });
-
-    });
-
-});
-
-
-// =========================================
-// Button Animation
-// =========================================
-
-const button=document.querySelector(".hero-button");
-
-button.addEventListener("mouseenter",()=>{
-
-    button.style.transform="translateY(-4px) scale(1.03)";
-
-});
-
-button.addEventListener("mouseleave",()=>{
-
-    button.style.transform="translateY(0px) scale(1)";
-
-});
-
-
-// =========================================
-// Scroll Arrow
-// =========================================
-
+// Hide scroll indicator
+const indicator=document.querySelector(".scroll-indicator");
 window.addEventListener("scroll",()=>{
-
-    const arrow=document.querySelector(".scroll-indicator");
-
-    if(window.scrollY>100){
-
-        arrow.style.opacity="0";
-
-    }
-
-    else{
-
-        arrow.style.opacity="1";
-
-    }
-
+ if(!indicator) return;
+ indicator.style.opacity=window.scrollY>60?"0":"1";
+ indicator.style.transition="opacity .4s";
 });
-
-
-// =========================================
-// Future Build Placeholder
-// =========================================
-
-// BUILD 3
-// Gallery Animation
-
-// BUILD 4
-// Letter Animation
-
-// BUILD 5
-// Invitation
