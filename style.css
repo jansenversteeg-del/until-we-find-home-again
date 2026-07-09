@@ -101,3 +101,11 @@ body{font-family:'Inter',sans-serif;background:#f8f5f1;color:#2f2f2f;overflow-x:
 }
 
 }
+
+
+/* Bug Fix 0.31.1 */
+#loader.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
