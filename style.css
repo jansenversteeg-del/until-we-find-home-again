@@ -31,3 +31,73 @@ body{font-family:'Inter',sans-serif;background:#f8f5f1;color:#2f2f2f;overflow-x:
 @media(max-width:768px){
 .hero{height:90vh}.hero-title{font-size:48px}.hero-subtitle{font-size:18px}.hero-date{display:none}.intro{padding:80px 0}.intro h2{font-size:42px}.intro p{font-size:17px}
 }
+
+
+/* ===========================
+   Sprint 2 - Task 2
+   Added sections
+=========================== */
+
+.section-container{
+    width:min(1100px,90%);
+    margin:0 auto;
+    padding:80px 0;
+}
+
+.section-label{
+    display:inline-block;
+    color:#c89b6d;
+    font-size:.85rem;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.timeline,
+.gallery,
+.letter,
+.closing{
+    background:#fff;
+}
+
+.timeline h2,
+.gallery h2,
+.letter h2,
+.closing h2{
+    font-size:2.2rem;
+    margin-bottom:20px;
+}
+
+.timeline-placeholder{
+    display:grid;
+    gap:24px;
+    margin-top:32px;
+}
+
+.timeline-placeholder article{
+    border-left:4px solid #c89b6d;
+    padding-left:20px;
+}
+
+.footer{
+    text-align:center;
+    padding:40px 20px;
+    background:#111;
+    color:#fff;
+}
+
+@media (max-width:768px){
+
+.section-container{
+    width:92%;
+    padding:60px 0;
+}
+
+.timeline h2,
+.gallery h2,
+.letter h2,
+.closing h2{
+    font-size:1.8rem;
+}
+
+}

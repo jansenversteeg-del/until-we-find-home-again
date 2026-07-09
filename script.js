@@ -1,50 +1,50 @@
-/* BUILD 3 PART 1C */
+/*
+Until We Find Home Again
+Release 0.31 Alpha - Sprint 2 Task 3
+*/
 
-window.addEventListener("load",()=>{
- const loader=document.getElementById("loader");
- setTimeout(()=>{
-   loader.style.opacity="0";
-   setTimeout(()=>loader.style.display="none",800);
- },1400);
+document.addEventListener("DOMContentLoaded", () => {
+    initLoader();
+    initSmoothScroll();
+    initScrollReveal();
 });
 
-// Ken Burns hero
-const bg=document.querySelector(".hero-background");
-let scale=1.08;
-function animateHero(){
-  scale+=0.00008;
-  if(bg){bg.style.transform=`scale(${scale})`;}
-  requestAnimationFrame(animateHero);
+function initLoader() {
+    const loader = document.querySelector(".loader");
+    if (!loader) return;
+    window.addEventListener("load", () => {
+        loader.classList.add("hide");
+        setTimeout(() => loader.remove(), 500);
+    });
 }
-if(bg){requestAnimationFrame(animateHero);}
 
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
- a.addEventListener("click",e=>{
-   e.preventDefault();
-   document.querySelector(a.getAttribute("href"))
-     ?.scrollIntoView({behavior:"smooth"});
- });
-});
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener("click", e => {
+            const target = document.querySelector(link.getAttribute("href"));
+            if (!target) return;
+            e.preventDefault();
+            target.scrollIntoView({behavior:"smooth", block:"start"});
+        });
+    });
+}
 
-// Reveal animation
-const io=new IntersectionObserver(entries=>{
- entries.forEach(entry=>{
-   if(entry.isIntersecting){
-     entry.target.classList.add("show");
-   }
- });
-},{threshold:0.15});
+function initScrollReveal() {
+    const sections = document.querySelectorAll(".timeline,.gallery,.letter,.closing,.story-section");
 
-document.querySelectorAll(".intro,.timeline-item,.coming-soon").forEach(el=>{
- el.classList.add("fade-up");
- io.observe(el);
-});
+    if (!("IntersectionObserver" in window)) {
+        sections.forEach(s => s.classList.add("show"));
+        return;
+    }
 
-// Hide scroll indicator
-const indicator=document.querySelector(".scroll-indicator");
-window.addEventListener("scroll",()=>{
- if(!indicator) return;
- indicator.style.opacity=window.scrollY>60?"0":"1";
- indicator.style.transition="opacity .4s";
-});
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                entry.target.classList.add("show");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {threshold:0.15});
+
+    sections.forEach(section => observer.observe(section));
+}
