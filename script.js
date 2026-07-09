@@ -15,18 +15,15 @@ function initLoader() {
 
     if (!loader) return;
 
-    window.addEventListener("load", () => {
-
+    const hideLoader = () => {
         loader.classList.add("hide");
+        setTimeout(() => loader.remove(), 800);
+    };
 
-        setTimeout(() => {
+    window.addEventListener("load", hideLoader);
 
-            loader.remove();
-
-        },800);
-
-    });
-
+    // Fallback kalau event load tidak terpanggil
+    setTimeout(hideLoader, 3000);
 }
 
 function initSmoothScroll() {
