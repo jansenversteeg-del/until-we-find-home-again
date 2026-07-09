@@ -10,20 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initLoader() {
-
-    const loader = document.getElementById("loader");
-
+    const loader = document.querySelector(".loader");
     if (!loader) return;
-
-    const hideLoader = () => {
+    window.addEventListener("load", () => {
         loader.classList.add("hide");
-        setTimeout(() => loader.remove(), 800);
-    };
-
-    window.addEventListener("load", hideLoader);
-
-    // Fallback kalau event load tidak terpanggil
-    setTimeout(hideLoader, 3000);
+        setTimeout(() => loader.remove(), 500);
+    });
 }
 
 function initSmoothScroll() {
