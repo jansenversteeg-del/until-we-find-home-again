@@ -10,12 +10,23 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initLoader() {
+
     const loader = document.getElementById("loader");
+
     if (!loader) return;
+
     window.addEventListener("load", () => {
+
         loader.classList.add("hide");
-        setTimeout(() => loader.remove(), 500);
+
+        setTimeout(() => {
+
+            loader.remove();
+
+        },800);
+
     });
+
 }
 
 function initSmoothScroll() {
