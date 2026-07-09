@@ -1,0 +1,111 @@
+/* BUILD 3 PART 1B */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#f8f5f1;color:#2f2f2f;overflow-x:hidden}
+#loader{position:fixed;inset:0;background:#111;display:flex;align-items:center;justify-content:center;color:#fff;z-index:9999;transition:.8s}
+.loader-content{text-align:center}
+.loader-heart{font-size:46px;animation:pulse 1.6s infinite}
+.loader-content h1{font-family:'Cormorant Garamond',serif;font-size:42px;margin:18px 0}
+.hero{position:relative;height:85vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-background{position:absolute;inset:0;background:url('assets/images/hero.jpg') center 25%/cover no-repeat;transform:scale(1.08)}
+.hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.hero-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05),rgba(0,0,0,.55))}
+.hero-container{position:relative;z-index:2;text-align:center;color:#fff;width:min(900px,90%)}
+.hero-label{display:block;letter-spacing:5px;font-size:12px;margin-bottom:24px;opacity:.9}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:72px;line-height:.95}
+.hero-subtitle{margin-top:28px;font-size:22px;font-weight:300;line-height:1.8}
+.hero-button{display:inline-block;margin-top:40px;padding:18px 40px;border-radius:999px;text-decoration:none;color:#fff;background:rgba(255,255,255,.15);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.2);transition:.3s}
+.hero-button:hover{transform:translateY(-4px);background:rgba(255,255,255,.22)}
+.hero-date{position:absolute;bottom:28px;color:#fff;font-size:12px;opacity:.7;letter-spacing:2px}
+.hero-date-left{left:40px}.hero-date-right{right:40px}
+.scroll-indicator{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px}
+.scroll-indicator span{width:8px;height:8px;border-radius:50%;background:#fff;opacity:.5;animation:blink 1.8s infinite}
+.scroll-indicator span:nth-child(2){animation-delay:.2s}.scroll-indicator span:nth-child(3){animation-delay:.4s}
+.intro{background:#fff;padding:120px 0}
+.intro-wrapper{width:min(760px,90%);margin:auto;text-align:center}
+.intro-small{letter-spacing:4px;color:#b7865d;text-transform:uppercase;font-size:12px}
+.intro h2{font-family:'Cormorant Garamond',serif;font-size:58px;margin:24px 0}
+.intro p{font-size:20px;line-height:2;color:#666;margin:18px 0}
+@keyframes pulse{50%{transform:scale(1.15)}}
+@keyframes blink{50%{opacity:1;transform:translateY(6px)}}
+@media(max-width:768px){
+.hero{height:90vh}.hero-title{font-size:48px}.hero-subtitle{font-size:18px}.hero-date{display:none}.intro{padding:80px 0}.intro h2{font-size:42px}.intro p{font-size:17px}
+}
+
+
+/* ===========================
+   Sprint 2 - Task 2
+   Added sections
+=========================== */
+
+.section-container{
+    width:min(1100px,90%);
+    margin:0 auto;
+    padding:80px 0;
+}
+
+.section-label{
+    display:inline-block;
+    color:#c89b6d;
+    font-size:.85rem;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.timeline,
+.gallery,
+.letter,
+.closing{
+    background:#fff;
+}
+
+.timeline h2,
+.gallery h2,
+.letter h2,
+.closing h2{
+    font-size:2.2rem;
+    margin-bottom:20px;
+}
+
+.timeline-placeholder{
+    display:grid;
+    gap:24px;
+    margin-top:32px;
+}
+
+.timeline-placeholder article{
+    border-left:4px solid #c89b6d;
+    padding-left:20px;
+}
+
+.footer{
+    text-align:center;
+    padding:40px 20px;
+    background:#111;
+    color:#fff;
+}
+
+@media (max-width:768px){
+
+.section-container{
+    width:92%;
+    padding:60px 0;
+}
+
+.timeline h2,
+.gallery h2,
+.letter h2,
+.closing h2{
+    font-size:1.8rem;
+}
+
+}
+
+
+/* Bug Fix 0.31.1 */
+#loader.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
