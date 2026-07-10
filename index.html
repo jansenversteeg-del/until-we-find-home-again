@@ -69,10 +69,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
    4. HERO STAGE (FULL SCREEN)
    ========================================================================== */
 .hero { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; }
-.hero-bg { position: absolute; inset: 0; background: url('assets/images/photo1.jpg') center center/cover no-repeat; opacity: 0.65; transform: scale(1.05); }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7)); }
+.hero-bg { position: absolute; inset: 0; background: url('assets/images/hero.jpg') center 25%/cover no-repeat; opacity: 0.65; transform: scale(1.05); }
+.hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+.hero-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.55)); }
 .hero-content { position: relative; z-index: 5; text-align: center; color: #ffffff; width: min(850px, 90%); }
-.hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 6vw, 76px); font-weight: 400; line-height: 1.15; letter-spacing: -0.5px; }
+.hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 6vw, 76px); font-weight: 400; line-height: 0.95; letter-spacing: -0.5px; }
 .hero-subtitle { margin-top: 28px; font-size: clamp(15px, 2.5vw, 19px); font-weight: 300; line-height: 1.8; color: rgba(255,255,255,0.85); max-width: 620px; margin-left: auto; margin-right: auto; }
 .hero-btn { display: inline-block; margin-top: 42px; padding: 18px 44px; border-radius: 999px; text-decoration: none; color: #ffffff; background: rgba(255,255,255,0.12); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; transition: 0.3s ease; }
 .hero-btn:hover { background: #ffffff; color: #000000; transform: translateY(-3px); }
@@ -168,7 +169,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 .coda-heart { font-size: 28px; color: var(--wine-red); margin-bottom: 24px; animation: heartbeat 1.6s infinite; }
 .coda-title { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; letter-spacing: 1px; margin-bottom: 12px; color: rgba(255,255,255,0.95); }
 .coda-sub { font-size: 13px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 40px; }
-.coda-sign { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--rose-gold); }
+.coda-sign font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--rose-gold); }
 
 /* ==========================================================================
    14. ANIMATION ENGINE & REVEAL CLASSES
@@ -210,6 +211,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 </head>
 <body>
 
+<!-- 1. OPENING CINEMATIC SCREEN -->
 <div id="loader">
   <div class="cinematic-box">
     <div class="cinematic-heart">❤️</div>
@@ -219,6 +221,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
   </div>
 </div>
 
+<!-- 2. FLOATING AUDIO CONTROL LAYER -->
 <div class="audio-widget" id="musicController" onclick="toggleAudioState()">
   <div class="waveform">
     <div class="wave-bar"></div>
@@ -228,8 +231,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
   <span class="audio-label" id="audioStateLabel">Touch</span>
 </div>
 
+<!-- THE AUDIO DRIVER (Menggunakan path folder lokal sesuai spesifikasi folder structure) -->
 <audio id="cinematicAudio" loop src="assets/music/touch.mp3"></audio>
 
+<!-- 3. HERO STAGE -->
 <header class="hero">
   <div class="hero-bg"></div>
   <div class="hero-overlay"></div>
@@ -245,6 +250,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 </header>
 
 <main>
+  <!-- 4. STORY ENTRY BLOCK -->
   <section id="storyBlock" class="section-wrapper">
     <div class="container-narrow">
       <span class="tagline reveal">01 / INTRO</span>
@@ -254,6 +260,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
     </div>
   </section>
 
+  <!-- 5. TIMELINE STAGE -->
   <section class="section-wrapper" style="background: rgba(0,0,0,0.015);">
     <div class="container">
       <div class="container-narrow">
@@ -301,16 +308,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
     </div>
   </section>
 
+  <!-- 6. DYNAMIC LIVE COUNTER SECTION -->
   <section class="section-wrapper">
     <div class="container-narrow">
       <div class="counter-box reveal">
-        <div class="counter-numbers" id="liveDayCounter">3,400+</div>
+        <div class="counter-numbers" id="liveDayCounter">3.400+</div>
         <div class="counter-sub">Hari Bersama</div>
         <p class="prose" style="text-align:center; margin-top:20px; margin-bottom:0;">Tak semuanya sempurna. Tapi semuanya berharga.</p>
       </div>
     </div>
   </section>
 
+  <!-- 7. PINTEREST ARRESTING GALLERY -->
   <section class="section-wrapper" style="padding-bottom: 40px;">
     <div class="container">
       <div class="container-narrow">
@@ -319,15 +328,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
       </div>
       <div class="gallery-container">
         <div class="masonry-grid" id="masonryPool">
-          </div>
+          <!-- Injecting 32 images systematically via Javascript array loop matching assets folder -->
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- 8. INTERSTITIAL QUOTE ACCENT -->
   <div class="quote-divider reveal">
     <div class="quote-text">"Home isn't a place. It's you."</div>
   </div>
 
+  <!-- 9. THE PRIVATE LETTER STAGE -->
   <section class="section-wrapper letter-area">
     <div class="container-narrow">
       <span class="tagline reveal">04 / SURAT UNTUKMU</span>
@@ -343,6 +355,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
     </div>
   </section>
 
+  <!-- 10. LUXURY DINNER INVITATION -->
   <section class="section-wrapper">
     <div class="container-narrow">
       <div class="invitation-card reveal">
@@ -364,6 +377,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
   </section>
 </main>
 
+<!-- 11. LIGHTBOX CONTAINER FOR IMAGES -->
 <div class="lightbox" id="imageLightbox">
   <button class="lightbox-close" onclick="closeLightboxView()">&times;</button>
   <div class="lightbox-frame">
@@ -372,6 +386,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
   <div class="lightbox-caption" id="lightboxTargetCaption">Caption Memori</div>
 </div>
 
+<!-- 12. CINEMATIC OUTRO -->
 <footer class="coda">
   <div class="coda-heart">❤️</div>
   <h2 class="coda-title">Thank You</h2>
@@ -379,46 +394,32 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
   <div class="coda-sign">With Love,<br>Jansen</div>
 </footer>
 
+<!-- ==========================================================================
+   16. THE LOGICAL DRIVER ENGINE
+   ========================================================================== */ -->
 <script>
-// A. DATA DRIVER FOR 32 PICTURE CARDS (Using highly aesthetic unsplash placeholders optimized for luxury look)
-const assetsPhotoPool = [
-  { id: 1, src: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80", cap: "Langkah awal yang penuh harapan." },
-  { id: 2, src: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=600&q=80", cap: "Di antara tawa yang sederhana." },
-  { id: 3, src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80", cap: "Janji kecil di bawah langit sore." },
-  { id: 4, src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80", cap: "Momen yang terkunci abadi." },
-  { id: 5, src: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=600&q=80", cap: "Kehangatan di tengah badai ego." },
-  { id: 6, src: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80", cap: "Menatap masa depan bersama." },
-  { id: 7, src: "https://images.unsplash.com/photo-1482841628122-9080d44bb807?auto=format&fit=crop&w=600&q=80", cap: "Cangkir kopi dan cerita kita." },
-  { id: 8, src: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80", cap: "Di mana pun, asal bersamamu." },
-  { id: 9, src: "https://images.unsplash.com/photo-1513271936660-d369e1b2ae0a?auto=format&fit=crop&w=600&q=80", cap: "Setiap senyuman adalah rumah." },
-  { id: 10, src: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80", cap: "Merayakan detik demi detik." },
-  { id: 11, src: "https://images.unsplash.com/photo-1507504038482-7621c67d66af?auto=format&fit=crop&w=600&q=80", cap: "Tenang di balik pelukanmu." },
-  { id: 12, src: "https://images.unsplash.com/photo-1529636760656-e093412c33e2?auto=format&fit=crop&w=600&q=80", cap: "Menyusuri jalan-jalan sunyi." },
-  { id: 13, src: "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?auto=format&fit=crop&w=600&q=80", cap: "Cahaya hangat yang tak pernah redup." },
-  { id: 14, src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80", cap: "Saat dunia terasa milik berdua." },
-  { id: 15, src: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=600&q=80", cap: "Menyimpan sisa kenangan berharga." },
-  { id: 16, src: "https://images.unsplash.com/photo-1501901609772-df091766a466?auto=format&fit=crop&w=600&q=80", cap: "Kembali ke tempat semua bermula." },
-  { id: 17, src: "https://images.unsplash.com/photo-1517814647327-154161fa6751?auto=format&fit=crop&w=600&q=80", cap: "Mendengar detak jam berdua." },
-  { id: 18, src: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&w=600&q=80", cap: "Rencana-rencana besar kita." },
-  { id: 19, src: "https://images.unsplash.com/photo-1434064511983-18c6dae20ed5?auto=format&fit=crop&w=600&q=80", cap: "Mencari tenang di matamu." },
-  { id: 20, src: "https://images.unsplash.com/photo-1475503572774-15a45e5d60b9?auto=format&fit=crop&w=600&q=80", cap: "Melangkah tegap tanpa ragu." },
-  { id: 21, src: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80", cap: "Hari-hari lambat yang menenangkan." },
-  { id: 22, src: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=600&q=80", cap: "Genggaman erat di tengah badai." },
-  { id: 23, src: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80", cap: "Menghitung bintang, membagi mimpi." },
-  { id: 24, src: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=600&q=80", cap: "Dua cangkir teh di sore hari." },
-  { id: 25, src: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=600&q=80", cap: "Menulis babak baru bersama." },
-  { id: 26, src: "https://images.unsplash.com/photo-1519225495810-7512c696505a?auto=format&fit=crop&w=600&q=80", cap: "Langkah kecil yang konsisten." },
-  { id: 27, src: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80", cap: "Belajar memahami arti sabar." },
-  { id: 28, src: "https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=600&q=80", cap: "Hening malam yang jujur." },
-  { id: 29, src: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=600&q=80", cap: "Menepis kabut ketidakpastian." },
-  { id: 30, src: "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=600&q=80", cap: "Bersandar pada komitmen dasar." },
-  { id: 31, src: "https://images.unsplash.com/photo-1494972308805-463bc619b34e?auto=format&fit=crop&w=600&q=80", cap: "Mendewasa bersama waktu." },
-  { id: 32, src: "https://images.unsplash.com/photo-1455906876573-409ee888094a?auto=format&fit=crop&w=600&q=80", cap: "Hingga kita menemukan jalan pulang." }
+// A. DATA DRIVER FOR 32 PICTURE CARDS (Menggunakan path internal folder assets/images/ secara berurutan)
+const captionsPool = [
+  "Langkah awal yang penuh harapan.", "Di antara tawa yang sederhana.", "Janji kecil di bawah langit sore.", "Momen yang terkunci abadi.",
+  "Kehangatan di tengah badai ego.", "Menatap masa depan bersama.", "Cangkir kopi dan cerita kita.", "Di mana pun, asal bersamamu.",
+  "Setiap senyuman adalah rumah.", "Merayakan detik demi detik.", "Tenang di balik pelukanmu.", "Menyusuri jalan-jalan sunyi.",
+  "Cahaya hangat yang tak pernah redup.", "Saat dunia terasa milik berdua.", "Menyimpan sisa kenangan berharga.", "Kembali ke tempat semua bermula.",
+  "Mendengar detak jam berdua.", "Rencana-rencana besar kita.", "Mencari tenang di matamu.", "Melangkah tegap tanpa ragu.",
+  "Hari-hari lambat yang menenangkan.", "Genggaman erat di tengah badai.", "Menghitung bintang, membagi mimpi.", "Dua cangkir teh di sore hari.",
+  "Menulis babak baru bersama.", "Langkah kecil yang konsisten.", "Belajar memahami arti sabar.", "Hening malam yang jujur.",
+  "Menepis kabut ketidakpastian.", "Bersandar pada komitmen dasar.", "Mendewasa bersama waktu.", "Hingga kita menemukan jalan pulang."
 ];
 
-// Perintah kustomisasi aset mandiri: Ganti link di atas dengan path "assets/images/photo1.jpg" dst jika ingin menggunakan lokal direktori.
+const assetsPhotoPool = [];
+for (let i = 1; i <= 32; i++) {
+    assetsPhotoPool.push({
+        id: i,
+        src: `assets/images/photo${i}.jpg`,
+        cap: captionsPool[i - 1] || `Potongan cerita indah ke-${i}.`
+    });
+}
 
-// B. POPULATE GALLERY ON MASONRY
+// B. POPULATE GALLERY ON MASONRY GRID
 const grid = document.getElementById('masonryPool');
 assetsPhotoPool.forEach(photo => {
     const card = document.createElement('div');
@@ -440,7 +441,7 @@ function computeMemoryDays() {
     const disparityTime = currentDate.getTime() - initialDate.getTime();
     const countedDays = Math.floor(disparityTime / (1000 * 3600 * 24));
     
-    // Memberikan format ribuan yang elegan (cth: 3.765+)
+    // Memberikan format ribuan Indonesia yang elegan (cth: 3.765+)
     document.getElementById('liveDayCounter').innerText = countedDays.toLocaleString('id-ID') + '+';
 }
 computeMemoryDays();
@@ -465,7 +466,7 @@ function initiateExperience() {
         controlBox.classList.add("visible");
         statusText.innerText = "Playing";
     }).catch(err => {
-        console.log("Audio autoplay prevented by user permission logic.");
+        console.log("Audio autoplay prevented by browser permissions.");
         controlBox.classList.add("visible");
         controlBox.classList.add("paused");
         statusText.innerText = "Paused";
