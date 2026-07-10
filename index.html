@@ -6,8 +6,171 @@
 <title>For Olivia ❤️</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   1. RESET & VARIABLES
+   ========================================================================== */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root {
+    --bg-primary: #f8f5f1;
+    --bg-card: #ffffff;
+    --text-main: #2f2f2f;
+    --text-muted: #666666;
+    --accent: #b7865d;
+    --accent-light: #c89b6d;
+    --dark: #111111;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg-primary);color:var(--text-main);overflow-x:hidden}
+
+/* ==========================================================================
+   2. OPENING CINEMATIC & LOADER
+   ========================================================================== */
+#loader{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;color:#fff;z-index:9999;transition:opacity 1s ease, visibility 1s ease}
+.loader-content{text-align:center;padding:20px;max-width:500px}
+.loader-heart{font-size:50px;animation:pulse 1.6s infinite;color: #e28743}
+.loader-content h1{font-family:'Cormorant Garamond',serif;font-size:42px;margin:24px 0;font-weight:500;letter-spacing:1px}
+.loader-content p{font-size:14px;opacity:0.7;letter-spacing:2px;margin-bottom:32px}
+.start-btn {padding:14px 36px;border-radius:999px;border:1px solid rgba(255,255,255,0.3);background:transparent;color:#fff;cursor:pointer;font-size:13px;letter-spacing:2px;text-transform:uppercase;transition:0.4s;opacity:0;animation:fadeIn 1s forwards 1.5s}
+.start-btn:hover {background:#fff;color:var(--dark);transform:scale(1.05)}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+
+/* ==========================================================================
+   3. MUSIC PLAYER (FLOATING)
+   ========================================================================== */
+.music-player {position:fixed;bottom:30px;right:30px;z-index:999;background:rgba(255,255,255,0.85);backdrop-filter:blur(10px);padding:10px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,0.08);display:flex;align-items:center;gap:12px;border:1px solid rgba(183,134,93,0.2);cursor:pointer;transition:0.3s}
+.music-player:hover {transform:translateY(-3px);background:#fff}
+.music-icon {width:24px;height:24px;fill:var(--accent);display:flex;align-items:center;justify-content:center}
+.music-info {font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--text-main);font-weight:500}
+.music-bars {display:flex;align-items:flex-end;gap:2px;height:12px}
+.bar {width:2px;height:100%;background:var(--accent);animation:bounce 1s ease infinite alternate;transform-origin:bottom}
+.bar:nth-child(2) {animation-delay:0.2s}
+.bar:nth-child(3) {animation-delay:0.4s}
+.music-player.paused .bar {animation:none;height:3px}
+
+/* ==========================================================================
+   4. HERO PREMIUM
+   ========================================================================== */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-background{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1920&q=80') center 25%/cover no-repeat;transform:scale(1.05);animation:zoomOutBg 10s forwards}
+.hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.4)}
+.hero-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1),rgba(0,0,0,0.6))}
+.hero-container{position:relative;z-index:2;text-align:center;color:#fff;width:min(900px,90%)}
+.hero-label{display:block;letter-spacing:6px;font-size:11px;margin-bottom:24px;opacity:0.9;font-weight:500}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:82px;line-height:1;font-weight:500;letter-spacing:-1px}
+.hero-subtitle{margin-top:32px;font-size:20px;font-weight:300;line-height:1.8;opacity:0.9}
+.hero-button{display:inline-block;margin-top:40px;padding:18px 44px;border-radius:999px;text-decoration:none;color:#fff;background:rgba(255,255,255,0.15);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.25);transition:0.3s;font-size:13px;letter-spacing:2px;text-transform:uppercase}
+.hero-button:hover{transform:translateY(-4px);background:rgba(255,255,255,0.25);box-shadow:0 10px 25px rgba(0,0,0,0.1)}
+.hero-date{position:absolute;bottom:35px;color:#fff;font-size:12px;opacity:0.7;letter-spacing:3px;font-weight:500}
+.hero-date-left{left:50px}.hero-date-right{right:50px}
+.scroll-indicator{position:absolute;left:50%;bottom:35px;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px}
+.scroll-indicator span{width:6px;height:6px;border-radius:50%;background:#fff;opacity:0.4;animation:blink 1.8s infinite}
+.scroll-indicator span:nth-child(2){animation-delay:.2s}.scroll-indicator span:nth-child(3){animation-delay:.4s}
+
+/* ==========================================================================
+   5. STORY SECTION
+   ========================================================================== */
+.section-spacer {padding:120px 0}
+.container-narrow {width:min(760px,90%);margin:auto}
+.center-text {text-align:center}
+.label-premium {letter-spacing:4px;color:var(--accent);text-transform:uppercase;font-size:12px;font-weight:600;display:block;margin-bottom:16px}
+.title-serif {font-family:'Cormorant Garamond',serif;font-size:56px;color:var(--text-main);margin-bottom:32px;font-weight:500;line-height:1.2}
+.story-text {font-size:18px;line-height:2;color:var(--text-muted);margin-bottom:28px;font-weight:300}
+.story-text strong {color:var(--text-main);font-weight:500}
+
+/* ==========================================================================
+   6. TIMELINE PREMIUM
+   ========================================================================== */
+.timeline-section {background:var(--bg-card);position:relative;overflow:hidden}
+.timeline-container {position:relative;max-width:1000px;margin:60px auto 0;padding:0 20px}
+.timeline-container::before {content:'';position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(183,134,93,0.25);transform:translateX(-50%)}
+.timeline-item {position:relative;width:50%;padding:20px 40px;box-sizing:border-box;opacity:0;transform:translateY(40px);transition:all 0.8s ease}
+.timeline-item.show {opacity:1;transform:translateY(0)}
+.timeline-item:nth-child(odd) {left:0;text-align:right}
+.timeline-item:nth-child(even) {left:50%;text-align:left}
+.timeline-dot {position:absolute;left:50%;top:30px;width:12px;height:12px;background:var(--accent);border-radius:50%;transform:translateX(-50%);z-index:2;box-shadow:0 0 0 6px rgba(183,134,93,0.15)}
+.timeline-date {font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--accent);font-style:italic;margin-bottom:8px;display:block}
+.timeline-content {background:var(--bg-primary);padding:28px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.02);display:inline-block;text-align:left;max-width:100%}
+.timeline-content h3 {font-size:18px;margin-bottom:12px;font-weight:500;color:var(--text-main)}
+.timeline-content p {font-size:15px;color:var(--text-muted);line-height:1.6;font-weight:300}
+
+/* ==========================================================================
+   7. GALLERY (32 IMAGES PLACEHOLDER)
+   ========================================================================== */
+.gallery-grid {display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;margin-top:48px}
+.gallery-item {position:relative;aspect-ratio:1;overflow:hidden;border-radius:8px;background:var(--bg-primary);box-shadow:0 4px 10px rgba(0,0,0,0.02);opacity:0;transform:scale(0.95);transition:all 0.6s ease}
+.gallery-item.show {opacity:1;transform:scale(1)}
+.gallery-item img {width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+.gallery-item:hover img {transform:scale(1.08)}
+.gallery-overlay-card {position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.4), transparent);opacity:0;transition:0.3s;display:flex;align-items:flex-end;padding:16px;color:#fff;font-size:12px;letter-spacing:1px}
+.gallery-item:hover .gallery-overlay-card {opacity:1}
+
+/* ==========================================================================
+   8. LETTER SECTION
+   ========================================================================== */
+.letter-section {background:var(--bg-card)}
+.letter-paper {background:#fff;padding:60px;border-radius:4px;box-shadow:0 15px 50px rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.03);position:relative;margin-top:40px}
+.letter-paper::before {content:'';position:absolute;inset:15px;border:1px dashed rgba(183,134,93,0.25);pointer-events:none}
+.letter-p {font-size:16px;line-height:2;color:var(--text-main);margin-bottom:24px;font-weight:400;text-align:justify}
+.letter-signature {margin-top:48px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--accent)}
+
+/* ==========================================================================
+   9. DINNER INVITATION
+   ========================================================================== */
+.dinner-box {background:var(--dark);color:#fff;padding:60px 40px;border-radius:16px;text-align:center;margin-top:40px;position:relative;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.15)}
+.dinner-box::after {content:'';position:absolute;inset:10px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;pointer-events:none}
+.dinner-title {font-family:'Cormorant Garamond',serif;font-size:42px;color:#fff;margin-bottom:16px;font-weight:500}
+.dinner-details {display:flex;justify-content:center;gap:40px;margin:32px 0;padding:20px 0;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1)}
+.detail-item span {display:block;font-size:11px;letter-spacing:2px;color:var(--accent-light);text-transform:uppercase;margin-bottom:6px}
+.detail-item p {font-size:16px;font-weight:400}
+.dinner-btn {display:inline-block;padding:16px 40px;background:var(--accent);color:#fff;text-decoration:none;border-radius:999px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;transition:0.3s;border:none;cursor:pointer}
+.dinner-btn:hover {background:var(--accent-light);transform:translateY(-2px);box-shadow:0 10px 20px rgba(183,134,93,0.3)}
+
+/* ==========================================================================
+   10. ENDING & FOOTER
+   ========================================================================== */
+.ending-section {background:var(--bg-primary);text-align:center;padding:140px 0}
+.heart-final {font-size:32px;color:#c94c4c;animation:pulse 1.4s infinite;margin-bottom:24px}
+.footer {background:var(--dark);color:rgba(255,255,255,0.4);text-align:center;padding:30px;font-size:12px;letter-spacing:1px;border-top:1px solid rgba(255,255,255,0.05)}
+
+/* ==========================================================================
+   11. ANIMATIONS & REVEAL CLASS
+   ========================================================================== */
+.reveal {opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1)}
+.reveal.show {opacity:1;transform:translateY(0)}
+.delay-1 {transition-delay:0.2s}
+.delay-2 {transition-delay:0.4s}
+.delay-3 {transition-delay:0.6s}
+
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes blink{0%,100%{opacity:0.3;transform:translateY(0)}50%{opacity:1;transform:translateY(6px)}}
+@keyframes bounce{from{height:20%}to{height:100%}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes zoomOutBg{from{transform:scale(1.12)}to{transform:scale(1.05)}}
+
+/* ==========================================================================
+   12. RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+@media(max-width:992px){
+    .gallery-grid {grid-template-columns:repeat(3, 1fr)}
+}
+@media(max-width:768px){
+    .hero{height:90vh}.hero-title{font-size:52px}.hero-subtitle{font-size:16px}.hero-date{display:none}
+    .section-spacer {padding:80px 0}
+    .title-serif {font-size:38px;margin-bottom:20px}
+    .story-text {font-size:16px;line-height:1.8}
+    
+    .timeline-container::before {left:20px}
+    .timeline-item {width:100%;left:0 !important;text-align:left !important;padding-left:45px;padding-right:0}
+    .timeline-dot {left:20px}
+    .timeline-content {display:block}
+    
+    .gallery-grid {grid-template-columns:repeat(2, 1fr);gap:10px}
+    .letter-paper {padding:35px 20px}
+    .dinner-details {flex-direction:column;gap:20px;padding:15px 0}
+}
+</style>
 </head>
 <body>
 
@@ -15,9 +178,24 @@
   <div class="loader-content">
     <div class="loader-heart">❤</div>
     <h1>Until We Find Home Again</h1>
-    <p>Mempersiapkan sebuah cerita...</p>
+    <p>Sebuah cerita yang dirancang khusus untukmu.</p>
+    <button class="start-btn" onclick="startExperience()">Buka Cerita</button>
   </div>
 </div>
+
+<div class="music-player paused" id="musicPlayer" onclick="toggleMusic()">
+  <div class="music-icon">
+    <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+  </div>
+  <span class="music-info" id="musicStatus">Play Music</span>
+  <div class="music-bars">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+</div>
+
+<audio id="bgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
 <header class="hero">
   <div class="hero-background"></div>
@@ -26,64 +204,216 @@
 
   <div class="hero-container">
     <span class="hero-label">UNTUK OLIVIA AGATHA PUTRI</span>
-
-    <h1 class="hero-title">
-      Until We Find<br>Home Again
-    </h1>
-
-    <p class="hero-subtitle">
-      Kalau hari ini kamu punya waktu sekitar tujuh menit...
-    </p>
-
-    <a href="#intro" class="hero-button">Mulai Cerita</a>
+    <h1 class="hero-title">Until We Find<br>Home Again</h1>
+    <p class="hero-subtitle">Kalau hari ini kamu punya waktu sekitar tujuh menit...</p>
+    <a href="#storySection" class="hero-button">Mulai Membaca</a>
   </div>
 
   <div class="hero-date hero-date-left">07 • 03 • 2016</div>
   <div class="hero-date hero-date-right">11 • 11 • 2018</div>
-
-  <div class="scroll-indicator">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="scroll-indicator"><span></span><span></span><span></span></div>
 </header>
 
 <main>
+  <section id="storySection" class="section-spacer">
+    <div class="container-narrow center-text">
+      <span class="label-premium reveal">Sebuah Awal</span>
+      <h2 class="title-serif reveal delay-1">Hai Olivia...</h2>
+      <p class="story-text reveal delay-2">Website ini bukan dibuat untuk meminta jawaban instan hari ini. Ini adalah ruang kecil yang kukemas agar aku bisa menyampaikan hal-hal yang selama ini kerap tertahan dan sulit terucap langsung.</p>
+      <p class="story-text reveal delay-3">Setiap bait kata, lini masa, dan memori di sini ditulis dengan penuh kesadaran. Aku hanya ingin kamu tahu, terlepas dari apa pun langkah ke depan, <strong>aku sedang dan akan terus berusaha menjadi pribadi yang lebih baik.</strong></p>
+    </div>
+  </section>
 
-<section id="intro" class="intro">
+  <section class="section-spacer timeline-section">
+    <div class="container-narrow center-text">
+      <span class="label-premium reveal">Langkah & Waktu</span>
+      <h2 class="title-serif reveal delay-1">Perjalanan Kita</h2>
+    </div>
+    <div class="timeline-container">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <span class="timeline-date">Maret 2016</span>
+        <div class="timeline-content">
+          <h3>Pertemuan Pertama</h3>
+          <p>Awal di mana semua cerita ini bermula. Saat langkah kita tidak sengaja berpapasan dan dunia terasa sedikit berbeda.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <span class="timeline-date">November 2018</span>
+        <div class="timeline-content">
+          <h3>Babak Baru</h3>
+          <p>Sebuah tanggal penting yang mengunci ingatan. Di sinilah komitmen dan kedekatan kita menemukan bentuk terbaiknya.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <span class="timeline-date">Tahun-Tahun Pendewasaan</span>
+        <div class="timeline-content">
+          <h3>Ruang & Waktu</h3>
+          <p>Melewati pasang surut, jarak, serta ego masing-masing yang akhirnya mengajarkan arti rumah yang sesungguhnya.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <span class="timeline-date">Hari Ini</span>
+        <div class="timeline-content">
+          <h3>Mengetuk Kembali</h3>
+          <p>Bukan untuk mengulang masa lalu dengan kesalahan yang sama, tapi untuk menawarkan pondasi baru yang lebih kokoh.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="intro-wrapper">
+  <section class="section-spacer">
+    <div class="container-narrow center-text">
+      <span class="label-premium reveal">Arsip Memori</span>
+      <h2 class="title-serif reveal delay-1">Potongan Cerita</h2>
+    </div>
+    <div style="width: min(1200px, 92%); margin: auto;">
+      <div class="gallery-grid" id="galleryGrid">
+        </div>
+    </div>
+  </section>
 
-<span class="intro-small reveal">
-Sebuah Cerita
-</span>
+  <section class="section-spacer letter-section">
+    <div class="container-narrow">
+      <div class="center-text">
+        <span class="label-premium reveal">Surat Terbuka</span>
+        <h2 class="title-serif reveal delay-1">Untuk Jiwa yang Berharga</h2>
+      </div>
+      <div class="letter-paper reveal delay-2">
+        <p class="letter-p">Olivia,</p>
+        <p class="letter-p">Terima kasih sudah bertahan sejauh ini, dan terima kasih telah meluangkan waktumu untuk membaca hingga lembar ini. Aku tahu perjalanan kemarin tidak selalu mudah, ada bagian yang meninggalkan luka, dan ada hal-hal yang membuatmu ragu.</p>
+        <p class="letter-p">Aku tidak ingin terburu-buru. Ruang ini ada justru untuk memberimu kenyamanan bahwa kamu memegang kendali penuh atas waktumu sendiri. Aku di sini, siap memperbaiki apa yang runtuh, dan belajar menjadi rumah yang aman—tempat kamu pulang tanpa takut terluka lagi.</p>
+        <div class="letter-signature">Seseorang yang selalu mendoakanmu</div>
+      </div>
+    </div>
+  </section>
 
-<h2 class="intro-title reveal">
-Hai Olivia...
-</h2>
+  <section class="section-spacer">
+    <div class="container-narrow">
+      <div class="dinner-box reveal">
+        <span class="label-premium" style="color:var(--accent-light)">Reservasi Kecil</span>
+        <h2 class="dinner-title">A Sunday Dinner?</h2>
+        <p style="opacity: 0.8; font-weight: 300; max-width: 500px; margin: 0 auto 20px;">Jika akhir pekan ini senggang, aku ingin mengundangmu makan malam santai. Tanpa tekanan, hanya obrolan ringan.</p>
+        <div class="dinner-details">
+          <div class="detail-item">
+            <span>Waktu</span>
+            <p>Minggu, 19:00 WIB</p>
+          </div>
+          <div class="detail-item">
+            <span>Tempat</span>
+            <p>The Glasshouse Terrace</p>
+          </div>
+        </div>
+        <button class="dinner-btn" onclick="sendReply()">Konfirmasi via WhatsApp</button>
+      </div>
+    </div>
+  </section>
 
-<p class="story reveal delay-1">
-Website ini bukan dibuat untuk meminta jawaban hari ini.
-</p>
-
-<p class="story reveal delay-2">
-Aku hanya ingin menyampaikan sesuatu yang selama ini sulit kuucapkan secara langsung.
-</p>
-
-<p class="story reveal delay-3">
-Kalau setelah membaca semuanya nanti, kamu masih membutuhkan waktu, aku akan menghargai itu.
-</p>
-
-<p class="story reveal delay-4">
-Yang paling penting bagiku, kamu tahu bahwa aku sedang berusaha menjadi pribadi yang lebih baik.
-</p>
-
-</div>
-
-</section>
-
-<!-- Timeline Build 3 Part 2B akan ditambahkan di bawah sini -->
-
+  <section class="ending-section">
+    <div class="container-narrow center-text">
+      <div class="heart-final">❤</div>
+      <h2 class="title-serif" style="font-size:46px;">Until We Find Home Again.</h2>
+      <p style="color:var(--text-muted); font-weight:300; letter-spacing:1px; margin-top:16px;">Take all the time you need, Olivia.</p>
+    </div>
+  </section>
 </main>
 
-<script src="script.js"></script>
+<footer class="footer">
+  &copy; 2026 For Olivia Agatha Putri. Built with Heart.
+</footer>
+
+<script>
+// 1. Generate 32 Gambar Placeholder Premium agar grid terisi penuh secara estetik
+const galleryGrid = document.getElementById('galleryGrid');
+// Pool ID foto Unsplash bertema estetika, bunga, arsitektur, & tone hangat
+const randomImageIds = [114, 119, 152, 195, 235, 256, 312, 342, 365, 433, 445, 504, 521, 524, 529, 619, 634, 652, 674, 738, 776, 786, 794, 823, 839, 856, 883, 903, 912, 944, 984, 1011];
+
+for(let i = 1; i <= 32; i++) {
+    const item = document.createElement('div');
+    item.className = 'gallery-item reveal';
+    
+    // Menggunakan picsum.photos dengan id statis agar gambar tidak berubah-ubah tiap refresh
+    const imgId = randomImageIds[(i - 1) % randomImageIds.length];
+    const imgUrl = `https://picsum.photos/id/${imgId}/500/500`;
+    
+    item.innerHTML = `
+        <img src="${imgUrl}" alt="Memori ${i}" loading="lazy">
+        <div class="gallery-overlay-card">Memori #${String(i).padStart(2, '0')}</div>
+    `;
+    galleryGrid.appendChild(item);
+}
+
+// 2. Opening Cinematic Control
+function startExperience() {
+    const loader = document.getElementById("loader");
+    loader.classList.add("hide");
+    
+    // Auto-play musik saat tombol klik (bypass aturan kebijakan browser)
+    const music = document.getElementById("bgMusic");
+    const player = document.getElementById("musicPlayer");
+    const status = document.getElementById("musicStatus");
+    
+    music.play().then(() => {
+        player.classList.remove("paused");
+        status.innerText = "Now Playing";
+    }).catch(err => console.log("Playback diblokir, user harus interaksi lagi."));
+    
+    setTimeout(() => {
+        loader.remove();
+    }, 1000);
+}
+
+// 3. Music Player Control
+function toggleMusic() {
+    const music = document.getElementById("bgMusic");
+    const player = document.getElementById("musicPlayer");
+    const status = document.getElementById("musicStatus");
+
+    if (music.paused) {
+        music.play();
+        player.classList.remove("paused");
+        status.innerText = "Now Playing";
+    } else {
+        music.pause();
+        player.classList.add("paused");
+        status.innerText = "Music Paused";
+    }
+}
+
+// 4. Action Kirim WhatsApp
+function sendReply() {
+    const phone = "6281234567890"; // Ganti dengan nomor WhatsApp kamu
+    const text = encodeURIComponent("Hai, aku sudah membaca websitenya...");
+    window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+}
+
+// 5. Intersection Observer untuk Efek Scroll Reveal Premium
+document.addEventListener("DOMContentLoaded", () => {
+    const reveals = document.querySelectorAll(".reveal, .timeline-item");
+    
+    if (!("IntersectionObserver" in window)) {
+        reveals.forEach(el => el.classList.add("show"));
+        return;
+    }
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("show");
+                // opsional: unobserve jika ingin animasi hanya berjalan sekali
+                // observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px"
+    });
+
+    reveals.forEach(el => observer.observe(el));
+});
+</script>
 </body>
 </html>
