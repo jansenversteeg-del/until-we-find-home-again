@@ -169,7 +169,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 .coda-heart { font-size: 28px; color: var(--wine-red); margin-bottom: 24px; animation: heartbeat 1.6s infinite; }
 .coda-title { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; letter-spacing: 1px; margin-bottom: 12px; color: rgba(255,255,255,0.95); }
 .coda-sub { font-size: 13px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 40px; }
-.coda-sign font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--rose-gold); }
+.coda-sign { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--rose-gold); }
 
 /* ==========================================================================
    14. ANIMATION ENGINE & REVEAL CLASSES
@@ -179,6 +179,33 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 .delay-1 { transition-delay: 0.15s; }
 .delay-2 { transition-delay: 0.3s; }
 .delay-3 { transition-delay: 0.45s; }
+
+.gallery-card.reveal-left {
+    opacity: 0;
+    transform: translateX(-150px) rotate(-6deg) scale(0.85);
+    transition: opacity 1s cubic-bezier(0.175, 0.885, 0.32, 1.1), transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+.gallery-card.reveal-left.show {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+}
+
+.gallery-card.reveal-right {
+    opacity: 0;
+    transform: translateX(150px) rotate(6deg) scale(0.85);
+    transition: opacity 1s cubic-bezier(0.175, 0.885, 0.32, 1.1), transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+.gallery-card.reveal-right.show {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+}
+
+.gallery-card.reveal-left.show:hover,
+.gallery-card.reveal-right.show:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 @keyframes fadeInScale { to { opacity: 1; transform: scale(1); } }
@@ -207,16 +234,217 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
     .invitation-card { padding: 40px 20px; }
     .btn-choice { width: 100%; text-align: center; }
 }
+
+/* ==========================================================================
+   17. FULL-PAGE STORY SLIDESHOW ARCHITECTURE
+   ========================================================================== */
+body {
+    overflow: hidden !important;
+}
+
+.story-section {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--bg-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 1;
+    transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), visibility 1.2s;
+}
+
+.story-section-content {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 100px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Vertical center alignment helper */
+.story-section.valign-center .story-section-content {
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* Slide Transition States */
+.story-section.slide-down {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(80px) scale(0.96);
+}
+
+.story-section.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    z-index: 10;
+}
+
+.story-section.slide-up {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-80px) scale(0.96);
+}
+
+/* Floating Pagination Indicators */
+.story-pagination {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+.story-pagination.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.pagination-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(183, 134, 93, 0.25);
+    border: 1px solid var(--gold);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.pagination-dot.active {
+    background: var(--gold);
+    transform: scale(1.4);
+    box-shadow: 0 0 8px var(--gold);
+}
+
+/* Reset parent container padding to prevent layout squishing */
+.section-wrapper.story-section {
+    padding: 0 !important;
+}
+
+/* Center timeline markers on desktop track line */
+@media (min-width: 769px) {
+    .timeline-node:nth-child(odd) .node-marker {
+        left: auto;
+        right: -20px;
+        transform: translateY(-50%);
+        top: 50px;
+    }
+    .timeline-node:nth-child(even) .node-marker {
+        left: -20px;
+        transform: translateY(-50%);
+        top: 50px;
+    }
+    
+    /* Desktop Alternating Zipper Reveal Animations */
+    .timeline-node:nth-child(odd).reveal {
+        opacity: 0;
+        transform: translateX(-120px) scale(0.95);
+        transition: opacity 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.1), transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+    .timeline-node:nth-child(odd).reveal.show {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    .timeline-node:nth-child(even).reveal {
+        opacity: 0;
+        transform: translateX(120px) scale(0.95);
+        transition: opacity 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.1), transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+    .timeline-node:nth-child(even).reveal.show {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Mobile timeline reveal animation */
+@media (max-width: 768px) {
+    .timeline-node.reveal {
+        opacity: 0;
+        transform: translateX(50px);
+        transition: opacity 1s ease, transform 1s ease;
+    }
+    .timeline-node.reveal.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Deep-black backgrounds for Hero and Coda slide sections */
+.hero.story-section {
+    background: #000 !important;
+}
+.coda.story-section {
+    background: #0b0b0c !important;
+}
+
+/* Premium Navigation Buttons */
+.btn-next-section {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 40px;
+    padding: 12px 30px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid rgba(183, 134, 93, 0.4);
+    text-decoration: none;
+}
+.btn-next-section:hover {
+    background: var(--gold);
+    color: #ffffff;
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(183, 134, 93, 0.15);
+}
+
+/* Light button theme inside dark Quote divider slide */
+.quote-divider .btn-next-section {
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+.quote-divider .btn-next-section:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
 </style>
 </head>
 <body>
+<script>
+  if (window.location.hash) {
+    history.replaceState(null, null, ' ');
+  }
+  window.scrollTo(0, 0);
+</script>
 
 <!-- 1. OPENING CINEMATIC SCREEN -->
 <div id="loader">
   <div class="cinematic-box">
     <div class="cinematic-heart">❤️</div>
     <div class="cinematic-name">For Olivia Agatha Putri</div>
-    <div class="cinematic-title">One Last Story</div>
+    <div class="cinematic-title">Until We Find Home Again</div>
     <button class="cinematic-btn" onclick="initiateExperience()">▶ Begin</button>
   </div>
 </div>
@@ -232,145 +460,182 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 </div>
 
 <!-- THE AUDIO DRIVER (Menggunakan path folder lokal sesuai spesifikasi folder structure) -->
-<audio id="cinematicAudio" loop src="assets/music/touch.mp3"></audio>
+<audio id="cinematicAudio" loop src="assets/music/music.mp3"></audio>
 
 <!-- 3. HERO STAGE -->
-<header class="hero">
+<header class="hero story-section active">
   <div class="hero-bg"></div>
   <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <h1 class="hero-title">Until We Find<br>Home Again</h1>
-    <p class="hero-subtitle">Ada beberapa hal yang mungkin tidak pernah berhasil kusampaikan lewat kata-kata. Maka izinkan aku menyampaikannya melalui perjalanan ini.</p>
-    <a href="#storyBlock" class="hero-btn">Begin Journey</a>
-  </div>
-  <div class="scroll-hint">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
+  <div class="story-section-content" style="justify-content: center;">
+    <div class="hero-content">
+      <h1 class="hero-title">Until We Find<br>Home Again</h1>
+      <p class="hero-subtitle">Ada beberapa hal yang mungkin tidak pernah berhasil kusampaikan lewat kata-kata. Maka izinkan aku menyampaikannya melalui perjalanan ini.</p>
+      <a href="#storyBlock" class="hero-btn">Begin Journey</a>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
   </div>
 </header>
 
 <main>
   <!-- 4. STORY ENTRY BLOCK -->
-  <section id="storyBlock" class="section-wrapper">
-    <div class="container-narrow">
-      <span class="tagline reveal">01 / INTRO</span>
-      <h2 class="serif-heading reveal delay-1">Bagaimana Semuanya Dimulai</h2>
-      <p class="prose reveal delay-2">Menoleh ke belakang bukan berarti ingin terjebak di masa lalu. Kita telah melewati bentangan waktu yang panjang, hari-hari penuh tawa, hingga malam-malam sepi yang dipenuhi ketidakpastian. Di balik setiap dinamika tersebut, ada rasa yang tak pernah berubah kedalamannya.</p>
-      <p class="prose reveal delay-3">Langkah ini diambil bukan sebagai paksaan, melainkan sebuah pertanggungjawaban rasa yang dewasa. Aku ingin membuka ruang komunikasi yang jujur, tanpa topeng ego, hanya menyisakan niat tulus yang barangkali sempat terdistorsi oleh keadaan.</p>
+  <section id="storyBlock" class="section-wrapper story-section slide-down valign-center">
+    <div class="story-section-content">
+      <div class="container-narrow">
+        <span class="tagline reveal">01 / INTRO</span>
+        <h2 class="serif-heading reveal delay-1">Bagaimana Semuanya Dimulai</h2>
+        <p class="prose reveal delay-2">Menoleh ke belakang bukan berarti ingin terjebak di masa lalu. Kita telah melewati bentangan waktu yang panjang, hari-hari penuh tawa, hingga malam-malam sepi yang dipenuhi ketidakpastian. Di balik setiap dinamika tersebut, ada rasa yang tak pernah berubah kedalamannya.</p>
+        <p class="prose reveal delay-3">Langkah ini diambil bukan sebagai paksaan, melainkan sebuah pertanggungjawaban rasa yang dewasa. Aku ingin membuka ruang komunikasi yang jujur, tanpa topeng ego, hanya menyisakan niat tulus yang barangkali sempat terdistorsi oleh keadaan.</p>
+        <div style="text-align: center; margin-top: 40px;" class="reveal delay-3">
+          <button class="btn-next-section" onclick="goToSlide(2, 'next')">Continue ➔</button>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- 5. TIMELINE STAGE -->
-  <section class="section-wrapper" style="background: rgba(0,0,0,0.015);">
-    <div class="container">
-      <div class="container-narrow">
-        <span class="tagline reveal">02 / TIMELINE</span>
-        <h2 class="serif-heading reveal delay-1">Jejak Waktu Kita</h2>
-      </div>
-      
-      <div class="timeline-track">
-        <div class="timeline-node reveal">
-          <div class="node-marker">❤️</div>
-          <div class="node-card">
-            <span class="node-date">7 Maret 2016</span>
-            <h4>Hari Pertama Kita</h4>
-            <p>Awal dari segalanya. Titik balik di mana dua takdir memutuskan untuk menyusuri jalan yang sama.</p>
+  <section class="section-wrapper story-section slide-down" style="background: rgba(0,0,0,0.015);">
+    <div class="story-section-content">
+      <div class="container">
+        <div class="container-narrow">
+          <span class="tagline reveal">02 / TIMELINE</span>
+          <h2 class="serif-heading reveal delay-1">Jejak Waktu Kita</h2>
+        </div>
+        
+        <div class="timeline-track">
+          <div class="timeline-node reveal">
+            <div class="node-marker">❤️</div>
+            <div class="node-card">
+              <span class="node-date">7 Maret 2016</span>
+              <h4>Hari Pertama Kita</h4>
+              <p>Awal dari segalanya. Titik balik di mana dua takdir memutuskan untuk menyusuri jalan yang sama.</p>
+            </div>
+          </div>
+
+          <div class="timeline-node reveal">
+            <div class="node-marker">💍</div>
+            <div class="node-card">
+              <span class="node-date">11 November 2018</span>
+              <h4>Hari Kita Menjadi Keluarga</h4>
+              <p>Janji suci di hadapan altar kehidupan. Sebuah komitmen sakral untuk menyatukan visi, mimpi, dan tujuan masa depan.</p>
+            </div>
+          </div>
+
+          <div class="timeline-node reveal">
+            <div class="node-marker">🌱</div>
+            <div class="node-card">
+              <span class="node-date">Perjalanan</span>
+              <h4>Banyak Pelajaran & Pertumbuhan</h4>
+              <p>Melalui riak gelombang ego, kesalahan, dan dinamika pendewasaan yang menempa kita berdua menjadi pribadi yang lebih kuat.</p>
+            </div>
+          </div>
+
+          <div class="timeline-node reveal">
+            <div class="node-marker">🏡</div>
+            <div class="node-card">
+              <span class="node-date">Hari Ini</span>
+              <h4>Until We Find Home Again</h4>
+              <p>Menyadari arti pulang yang sesungguhnya. Berdiri dengan kedewasaan penuh untuk menjemput harapan baru.</p>
+            </div>
           </div>
         </div>
-
-        <div class="timeline-node reveal">
-          <div class="node-marker">💍</div>
-          <div class="node-card">
-            <span class="node-date">11 November 2018</span>
-            <h4>Hari Kita Menjadi Keluarga</h4>
-            <p>Janji suci di hadapan altar kehidupan. Sebuah komitmen sakral untuk menyatukan visi, mimpi, dan tujuan masa depan.</p>
-          </div>
-        </div>
-
-        <div class="timeline-node reveal">
-          <div class="node-marker">🌱</div>
-          <div class="node-card">
-            <span class="node-date">Perjalanan</span>
-            <h4>Banyak Pelajaran & Pertumbuhan</h4>
-            <p>Melalui riak gelombang ego, kesalahan, dan dinamika pendewasaan yang menempa kita berdua menjadi pribadi yang lebih kuat.</p>
-          </div>
-        </div>
-
-        <div class="timeline-node reveal">
-          <div class="node-marker">🏡</div>
-          <div class="node-card">
-            <span class="node-date">Hari Ini</span>
-            <h4>Until We Find Home Again</h4>
-            <p>Menyadari arti pulang yang sesungguhnya. Berdiri dengan kedewasaan penuh untuk menjemput harapan baru.</p>
-          </div>
+        <div style="text-align: center; margin-top: 40px;" class="reveal">
+          <button class="btn-next-section" onclick="goToSlide(3, 'next')">Next ➔</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 6. DYNAMIC LIVE COUNTER SECTION -->
-  <section class="section-wrapper">
-    <div class="container-narrow">
-      <div class="counter-box reveal">
-        <div class="counter-numbers" id="liveDayCounter">3.400+</div>
-        <div class="counter-sub">Hari Bersama</div>
-        <p class="prose" style="text-align:center; margin-top:20px; margin-bottom:0;">Tak semuanya sempurna. Tapi semuanya berharga.</p>
+  <section class="section-wrapper story-section slide-down valign-center">
+    <div class="story-section-content">
+      <div class="container-narrow">
+        <div class="counter-box reveal">
+          <div class="counter-numbers" id="liveDayCounter">3.400+</div>
+          <div class="counter-sub">Hari Bersama</div>
+          <p class="prose" style="text-align:center; margin-top:20px; margin-bottom:0;">Tak semuanya sempurna. Tapi semuanya berharga.</p>
+          <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-next-section" onclick="goToSlide(4, 'next')">Explore Gallery ➔</button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 7. PINTEREST ARRESTING GALLERY -->
-  <section class="section-wrapper" style="padding-bottom: 40px;">
-    <div class="container">
-      <div class="container-narrow">
-        <span class="tagline reveal">03 / ARSIP MEMORI</span>
-        <h2 class="serif-heading reveal delay-1">Potongan Cerita</h2>
-      </div>
-      <div class="gallery-container">
-        <div class="masonry-grid" id="masonryPool">
-          <!-- Injecting 32 images systematically via Javascript array loop matching assets folder -->
+  <section class="section-wrapper story-section slide-down" style="padding-bottom: 40px;">
+    <div class="story-section-content">
+      <div class="container">
+        <div class="container-narrow">
+          <span class="tagline reveal">03 / ARSIP MEMORI</span>
+          <h2 class="serif-heading reveal delay-1">Potongan Cerita</h2>
+        </div>
+        <div class="gallery-container">
+          <div class="masonry-grid" id="masonryPool">
+            <!-- Injecting 32 images systematically via Javascript array loop matching assets folder -->
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;" class="reveal">
+          <button class="btn-next-section" onclick="goToSlide(5, 'next')">Next ➔</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 8. INTERSTITIAL QUOTE ACCENT -->
-  <div class="quote-divider reveal">
-    <div class="quote-text">"Home isn't a place. It's you."</div>
+  <div class="quote-divider reveal story-section slide-down valign-center">
+    <div class="story-section-content">
+      <div class="quote-text">"Home isn't a place. It's you."</div>
+      <div style="text-align: center; margin-top: 30px;">
+        <button class="btn-next-section" onclick="goToSlide(6, 'next')">Read My Letter ➔</button>
+      </div>
+    </div>
   </div>
 
   <!-- 9. THE PRIVATE LETTER STAGE -->
-  <section class="section-wrapper letter-area">
-    <div class="container-narrow">
-      <span class="tagline reveal">04 / SURAT UNTUKMU</span>
-      <h2 class="serif-heading reveal delay-1">Dari Kedalaman Hati</h2>
-      
-      <div class="letter-box reveal delay-2">
-        <p class="letter-paragraph">Olivia,</p>
-        <p class="letter-paragraph">Aku sadar sepenuhnya bahwa dalam perjalanan panjang yang telah kita lalui, aku masih memiliki banyak kekurangan. Sebagai pribadi, sebagai suami, dan sebagai kepala rumah tangga, ada banyak keputusan serta sikapku yang mungkin tanpa sengaja menorehkan luka atau kekecewaan mendalam di hatimu.</p>
-        <p class="letter-paragraph">Aku tidak memiliki kekuatan untuk menghapus atau mengubah masa lalu yang telah terjadi. Namun, dari titik ini, aku ingin kamu tahu bahwa aku memiliki keinginan yang sangat besar untuk berubah. Aku berkomitmen penuh untuk terus berproses menjadi pribadi yang jauh lebih baik, lebih sabar, dan lebih bijaksana.</p>
-        <p class="letter-paragraph">Perubahan ini kuupayakan demi diriku sendiri, demi kamu, dan demi keluarga kecil yang selama ini selalu kita impikan bersama. Surat ini tidak ditulis untuk menuntut apa pun, melainkan sebagai bentuk kejujuran rasa yang paling murni.</p>
-        <div class="letter-signoff">With Love,<br>Jansen</div>
+  <section class="section-wrapper letter-area story-section slide-down">
+    <div class="story-section-content">
+      <div class="container-narrow">
+        <span class="tagline reveal">04 / SURAT UNTUKMU</span>
+        <h2 class="serif-heading reveal delay-1">Dari Kedalaman Hati</h2>
+        
+        <div class="letter-box reveal delay-2">
+          <p class="letter-paragraph">Olivia,</p>
+          <p class="letter-paragraph">Aku sadar sepenuhnya bahwa dalam perjalanan panjang yang telah kita lalui, aku masih memiliki banyak kekurangan. Sebagai pribadi, sebagai suami, dan sebagai kepala rumah tangga, ada banyak keputusan serta sikapku yang mungkin tanpa sengaja menorehkan luka atau kekecewaan mendalam di hatimu.</p>
+          <p class="letter-paragraph">Aku tidak memiliki kekuatan untuk menghapus atau mengubah masa lalu yang telah terjadi. Namun, dari titik ini, aku ingin kamu tahu bahwa aku memiliki keinginan yang sangat besar untuk berubah. Aku berkomitmen penuh untuk terus berproses menjadi pribadi yang jauh lebih baik, lebih sabar, dan lebih bijaksana.</p>
+          <p class="letter-paragraph">Perubahan ini kuupayakan demi diriku sendiri, demi kamu, dan demi keluarga kecil yang selama ini selalu kita impikan bersama. Surat ini tidak ditulis untuk menuntut apa pun, melainkan sebagai bentuk kejujuran rasa yang paling murni.</p>
+          <div class="letter-signoff">With Love,<br>Jansen</div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;" class="reveal">
+          <button class="btn-next-section" onclick="goToSlide(7, 'next')">Next ➔</button>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 10. LUXURY DINNER INVITATION -->
-  <section class="section-wrapper">
-    <div class="container-narrow">
-      <div class="invitation-card reveal">
-        <span class="tagline">RESERVASI KECIL</span>
-        <h2 class="serif-heading" style="font-size:36px; margin-bottom:16px;">Would You Have Dinner With Me?</h2>
-        <p class="prose" style="text-align: center; max-width: 580px; margin: 0 auto;">Aku tidak ingin mengajakmu makan malam untuk mencari siapa yang benar. Aku hanya ingin menghabiskan satu malam bersamamu. Mendengarkan ceritamu. Dan menikmati waktu bersama sekali lagi.</p>
-        
-        <div class="invitation-actions">
-          <button class="btn-choice btn-yes" onclick="processInvitationResponse('yes')">❤️ Yes</button>
-          <button class="btn-choice btn-maybe" onclick="processInvitationResponse('maybe')">🤍 I Need More Time</button>
-        </div>
+  <section class="section-wrapper story-section slide-down valign-center">
+    <div class="story-section-content">
+      <div class="container-narrow">
+        <div class="invitation-card reveal">
+          <span class="tagline">RESERVASI KECIL</span>
+          <h2 class="serif-heading" style="font-size:36px; margin-bottom:16px;">Would You Have Dinner With Me?</h2>
+          <p class="prose" style="text-align: center; max-width: 580px; margin: 0 auto;">Aku tidak ingin mengajakmu makan malam untuk mencari siapa yang benar. Aku hanya ingin menghabiskan satu malam bersamamu. Mendengarkan ceritamu. Dan menikmati waktu bersama sekali lagi.</p>
+          
+          <div class="invitation-actions">
+            <button class="btn-choice btn-yes" onclick="processInvitationResponse('yes')">❤️ Yes</button>
+            <button class="btn-choice btn-maybe" onclick="processInvitationResponse('maybe')">🤍 I Need More Time</button>
+          </div>
 
-        <div class="feedback-box">
-          <div class="feedback-msg" id="msgYes">Thank You ❤️</div>
-          <div class="feedback-msg" id="msgMaybe">Tidak apa-apa. Terima kasih sudah membaca semuanya. Aku akan menghargai waktu yang kamu butuhkan.</div>
+          <div class="feedback-box">
+            <div class="feedback-msg" id="msgYes">Thank You ❤️</div>
+            <div class="feedback-msg" id="msgMaybe">Tidak apa-apa. Terima kasih sudah membaca semuanya. Aku akan menghargai waktu yang kamu butuhkan.</div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+          <button class="btn-next-section" onclick="goToSlide(8, 'next')">Final Words ➔</button>
         </div>
       </div>
     </div>
@@ -387,43 +652,64 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 </div>
 
 <!-- 12. CINEMATIC OUTRO -->
-<footer class="coda">
-  <div class="coda-heart">❤️</div>
-  <h2 class="coda-title">Thank You</h2>
-  <div class="coda-sub">For Reading My Story.</div>
-  <div class="coda-sign">With Love,<br>Jansen</div>
+<footer class="coda story-section slide-down valign-center">
+  <div class="story-section-content">
+    <div class="coda-heart">❤️</div>
+    <h2 class="coda-title">Thank You</h2>
+    <div class="coda-sub">For Reading My Story.</div>
+    <div class="coda-sign">With Love,<br>Jansen</div>
+  </div>
 </footer>
+
+<!-- 13. FLOATING PAGINATION DOTS -->
+<div class="story-pagination hidden" id="storyPagination"></div>
 
 <!-- ==========================================================================
    16. THE LOGICAL DRIVER ENGINE
    ========================================================================== */ -->
 <script>
-// A. DATA DRIVER FOR 32 PICTURE CARDS (Menggunakan path internal folder assets/images/ secara berurutan)
-const captionsPool = [
-  "Langkah awal yang penuh harapan.", "Di antara tawa yang sederhana.", "Janji kecil di bawah langit sore.", "Momen yang terkunci abadi.",
-  "Kehangatan di tengah badai ego.", "Menatap masa depan bersama.", "Cangkir kopi dan cerita kita.", "Di mana pun, asal bersamamu.",
-  "Setiap senyuman adalah rumah.", "Merayakan detik demi detik.", "Tenang di balik pelukanmu.", "Menyusuri jalan-jalan sunyi.",
-  "Cahaya hangat yang tak pernah redup.", "Saat dunia terasa milik berdua.", "Menyimpan sisa kenangan berharga.", "Kembali ke tempat semua bermula.",
-  "Mendengar detak jam berdua.", "Rencana-rencana besar kita.", "Mencari tenang di matamu.", "Melangkah tegap tanpa ragu.",
-  "Hari-hari lambat yang menenangkan.", "Genggaman erat di tengah badai.", "Menghitung bintang, membagi mimpi.", "Dua cangkir teh di sore hari.",
-  "Menulis babak baru bersama.", "Langkah kecil yang konsisten.", "Belajar memahami arti sabar.", "Hening malam yang jujur.",
-  "Menepis kabut ketidakpastian.", "Bersandar pada komitmen dasar.", "Mendewasa bersama waktu.", "Hingga kita menemukan jalan pulang."
+// A. DATA DRIVER FOR PICTURE CARDS (All images and captions configured in one editable array)
+const assetsPhotoPool = [
+  { src: "assets/images/photo1.jpg", cap: "Langkah awal yang penuh harapan." },
+  { src: "assets/images/photo2.jpg", cap: "Di antara tawa yang sederhana." },
+  { src: "assets/images/photo3.jpg", cap: "Janji kecil di bawah langit sore." },
+  { src: "assets/images/photo4.jpg", cap: "Momen yang terkunci abadi." },
+  { src: "assets/images/photo5.jpg", cap: "Kehangatan di tengah badai ego." },
+  { src: "assets/images/photo6.jpg", cap: "Menatap masa depan bersama." },
+  { src: "assets/images/photo7.jpg", cap: "Cangkir kopi dan cerita kita." },
+  { src: "assets/images/photo8.jpg", cap: "Di mana pun, asal bersamamu." },
+  { src: "assets/images/photo9.jpg", cap: "Setiap senyuman adalah rumah." },
+  { src: "assets/images/photo10.jpg", cap: "Merayakan detik demi detik." },
+  { src: "assets/images/photo11.jpg", cap: "Tenang di balik pelukanmu." },
+  { src: "assets/images/photo12.jpg", cap: "Menyusuri jalan-jalan sunyi." },
+  { src: "assets/images/photo13.jpg", cap: "Cahaya hangat yang tak pernah redup." },
+  { src: "assets/images/photo14.jpg", cap: "Saat dunia terasa milik berdua." },
+  { src: "assets/images/photo15.jpg", cap: "Menyimpan sisa kenangan berharga." },
+  { src: "assets/images/photo16.jpg", cap: "Kembali ke tempat semua bermula." },
+  { src: "assets/images/photo17.jpg", cap: "Mendengar detak jam berdua." },
+  { src: "assets/images/photo18.jpg", cap: "Rencana-rencana besar kita." },
+  { src: "assets/images/photo19.jpg", cap: "Mencari tenang di matamu." },
+  { src: "assets/images/photo20.jpg", cap: "Melangkah tegap tanpa ragu." },
+  { src: "assets/images/photo21.jpg", cap: "Hari-hari lambat yang menenangkan." },
+  { src: "assets/images/photo22.jpg", cap: "Genggaman erat di tengah badai." },
+  { src: "assets/images/photo23.jpg", cap: "Menghitung bintang, membagi mimpi." },
+  { src: "assets/images/photo24.jpg", cap: "Dua cangkir teh di sore hari." },
+  { src: "assets/images/photo25.jpg", cap: "Menulis babak baru bersama." },
+  { src: "assets/images/photo26.jpg", cap: "Langkah kecil yang konsisten." },
+  { src: "assets/images/photo27.jpg", cap: "Belajar memahami arti sabar." },
+  { src: "assets/images/photo28.jpg", cap: "Hening malam yang jujur." },
+  { src: "assets/images/photo29.jpg", cap: "Menepis kabut ketidakpastian." },
+  { src: "assets/images/photo30.jpg", cap: "Bersandar pada komitmen dasar." },
+  { src: "assets/images/photo31.jpg", cap: "Mendewasa bersama waktu." },
+  { src: "assets/images/photo32.jpg", cap: "Hingga kita menemukan jalan pulang." }
 ];
-
-const assetsPhotoPool = [];
-for (let i = 1; i <= 32; i++) {
-    assetsPhotoPool.push({
-        id: i,
-        src: `assets/images/photo${i}.jpg`,
-        cap: captionsPool[i - 1] || `Potongan cerita indah ke-${i}.`
-    });
-}
 
 // B. POPULATE GALLERY ON MASONRY GRID
 const grid = document.getElementById('masonryPool');
-assetsPhotoPool.forEach(photo => {
+assetsPhotoPool.forEach((photo, index) => {
     const card = document.createElement('div');
-    card.className = 'gallery-card reveal';
+    const directionClass = (index % 2 === 0) ? 'reveal-left' : 'reveal-right';
+    card.className = `gallery-card reveal ${directionClass}`;
     card.onclick = () => openLightboxView(photo.src, photo.cap);
     card.innerHTML = `
         <img src="${photo.src}" alt="${photo.cap}" loading="lazy">
@@ -458,6 +744,13 @@ function initiateExperience() {
         targetLoader.style.opacity = '0';
         setTimeout(() => {
             targetLoader.style.display = 'none';
+            // Show pagination dots
+            const paginationWidget = document.getElementById('storyPagination');
+            if (paginationWidget) {
+                paginationWidget.classList.remove('hidden');
+            }
+            // Trigger reveals for the first slide (Hero)
+            triggerRevealsForActiveSlide(slides[0]);
         }, 1200);
     }
 
@@ -538,6 +831,231 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     revealTargets.forEach(target => triggerObserver.observe(target));
+});
+
+// I. FULL-PAGE STORY SLIDESHOW SYSTEM
+let currentSlideIndex = 0;
+let isTransitioning = false;
+const slides = document.querySelectorAll('.story-section');
+const totalSlides = slides.length;
+
+function goToSlide(index, direction) {
+    if (index < 0 || index >= totalSlides || isTransitioning) return;
+    
+    isTransitioning = true;
+    
+    // Deactivate current slide
+    const currentSlide = slides[currentSlideIndex];
+    currentSlide.classList.remove('active');
+    if (direction === 'next') {
+        currentSlide.classList.add('slide-up');
+        currentSlide.classList.remove('slide-down');
+    } else {
+        currentSlide.classList.add('slide-down');
+        currentSlide.classList.remove('slide-up');
+    }
+    
+    // Activate next slide
+    currentSlideIndex = index;
+    const nextSlide = slides[currentSlideIndex];
+    nextSlide.classList.remove('slide-up', 'slide-down');
+    nextSlide.classList.add('active');
+    
+    // Reset contents scroll to top when active
+    const nextContent = nextSlide.querySelector('.story-section-content');
+    if (nextContent) nextContent.scrollTop = 0;
+
+    // Update pagination
+    updatePagination();
+    
+    // Reset reveals in other slides, and trigger in active
+    resetRevealsForInactiveSlides();
+    triggerRevealsForActiveSlide(nextSlide);
+    
+    setTimeout(() => {
+        isTransitioning = false;
+    }, 1200);
+}
+
+function initPagination() {
+    const container = document.getElementById('storyPagination');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'pagination-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => {
+            if (i === currentSlideIndex) return;
+            const direction = i > currentSlideIndex ? 'next' : 'prev';
+            goToSlide(i, direction);
+        });
+        container.appendChild(dot);
+    }
+}
+
+function updatePagination() {
+    const dots = document.querySelectorAll('.pagination-dot');
+    dots.forEach((dot, idx) => {
+        if (idx === currentSlideIndex) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+}
+
+function triggerRevealsForActiveSlide(slide) {
+    const immediateReveals = slide.querySelectorAll('.reveal');
+    immediateReveals.forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight) {
+            el.classList.add('show');
+        }
+    });
+}
+
+function resetRevealsForInactiveSlides() {
+    slides.forEach((slide, idx) => {
+        if (idx !== currentSlideIndex) {
+            slide.querySelectorAll('.reveal').forEach(el => {
+                el.classList.remove('show');
+            });
+        }
+    });
+}
+
+// Event Listeners for Scrolling
+window.addEventListener('wheel', (e) => {
+    const loader = document.getElementById('loader');
+    if ((loader && loader.style.display !== 'none') || isTransitioning) return;
+
+    const activeSlide = slides[currentSlideIndex];
+    const content = activeSlide.querySelector('.story-section-content');
+    
+    const delta = e.deltaY;
+    if (Math.abs(delta) < 8) return; // ignore tiny scrolls
+
+    if (delta > 0) {
+        if (content) {
+            const isAtBottom = content.scrollTop + content.clientHeight >= content.scrollHeight - 5;
+            if (isAtBottom) {
+                goToSlide(currentSlideIndex + 1, 'next');
+            }
+        } else {
+            goToSlide(currentSlideIndex + 1, 'next');
+        }
+    } else {
+        if (content) {
+            const isAtTop = content.scrollTop <= 5;
+            if (isAtTop) {
+                goToSlide(currentSlideIndex - 1, 'prev');
+            }
+        } else {
+            goToSlide(currentSlideIndex - 1, 'prev');
+        }
+    }
+}, { passive: false });
+
+// Event Listeners for Touch/Swipes
+let touchStartY = 0;
+window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('touchend', (e) => {
+    const loader = document.getElementById('loader');
+    if ((loader && loader.style.display !== 'none') || isTransitioning) return;
+
+    const touchEndY = e.changedTouches[0].clientY;
+    const swipeDistance = touchStartY - touchEndY;
+    const swipeThreshold = 40;
+
+    if (Math.abs(swipeDistance) < swipeThreshold) return;
+
+    const activeSlide = slides[currentSlideIndex];
+    const content = activeSlide.querySelector('.story-section-content');
+
+    if (swipeDistance > 0) {
+        // Swiped up -> scroll down
+        if (content) {
+            const isAtBottom = content.scrollTop + content.clientHeight >= content.scrollHeight - 5;
+            if (isAtBottom) {
+                goToSlide(currentSlideIndex + 1, 'next');
+            }
+        } else {
+            goToSlide(currentSlideIndex + 1, 'next');
+        }
+    } else {
+        // Swiped down -> scroll up
+        if (content) {
+            const isAtTop = content.scrollTop <= 5;
+            if (isAtTop) {
+                goToSlide(currentSlideIndex - 1, 'prev');
+            }
+        } else {
+            goToSlide(currentSlideIndex - 1, 'prev');
+        }
+    }
+}, { passive: true });
+
+// Keyboard navigation
+window.addEventListener('keydown', (e) => {
+    const loader = document.getElementById('loader');
+    if ((loader && loader.style.display !== 'none') || isTransitioning) return;
+
+    const activeSlide = slides[currentSlideIndex];
+    const content = activeSlide.querySelector('.story-section-content');
+
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        if (content) {
+            const isAtBottom = content.scrollTop + content.clientHeight >= content.scrollHeight - 5;
+            if (isAtBottom) {
+                goToSlide(currentSlideIndex + 1, 'next');
+            }
+        } else {
+            goToSlide(currentSlideIndex + 1, 'next');
+        }
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        if (content) {
+            const isAtTop = content.scrollTop <= 5;
+            if (isAtTop) {
+                goToSlide(currentSlideIndex - 1, 'prev');
+            }
+        } else {
+            goToSlide(currentSlideIndex - 1, 'prev');
+        }
+    }
+});
+
+function initScrollRevealForContent(contentElement) {
+    contentElement.addEventListener('scroll', () => {
+        const reveals = contentElement.querySelectorAll('.reveal:not(.show)');
+        reveals.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 50) {
+                el.classList.add('show');
+            }
+        });
+    });
+}
+
+// Setup pagination on load
+document.addEventListener("DOMContentLoaded", () => {
+    initPagination();
+    
+    // Initialize scroll reveals for all slide contents
+    document.querySelectorAll('.story-section-content').forEach(content => {
+        initScrollRevealForContent(content);
+    });
+    
+    // Update begin button click handler
+    const beginBtn = document.querySelector('.hero-btn');
+    if (beginBtn) {
+        beginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            goToSlide(1, 'next');
+        });
+    }
 });
 </script>
 </body>
