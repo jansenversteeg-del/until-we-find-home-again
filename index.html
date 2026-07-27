@@ -93,13 +93,58 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 /* ==========================================================================
    6. PREMIUM TIMELINE (APPLE STYLE)
    ========================================================================== */
-.timeline-track { position: relative; max-width: 850px; margin: 80px auto 0; padding: 20px 0; }
+.timeline-track { position: relative; max-width: 1000px; margin: 80px auto 0; padding: 20px 0; }
 .timeline-track::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(183,134,93,0.2); transform: translateX(-50%); }
-.timeline-node { position: relative; width: 50%; padding: 20px 50px; box-sizing: border-box; }
-.timeline-node:nth-child(odd) { left: 0; text-align: right; }
-.timeline-node:nth-child(even) { left: 50%; text-align: left; }
-.node-marker { position: absolute; top: 26px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; background: var(--bg-card); border: 1px solid rgba(183,134,93,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-.node-card { background: var(--bg-card); padding: 32px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.015); border: 1px solid rgba(0,0,0,0.02); display: inline-block; text-align: left; width: 100%; transition: var(--transition-smooth); }
+.timeline-node {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 0;
+    box-sizing: border-box;
+}
+.node-marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: var(--bg-card);
+    border: 1px solid rgba(183, 134, 93, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+.node-card {
+    width: calc(50% - 60px);
+    background: var(--bg-card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.015);
+    border: 1px solid rgba(0,0,0,0.02);
+    box-sizing: border-box;
+    text-align: left;
+    transition: var(--transition-smooth);
+}
+.node-image-container {
+    width: calc(50% - 60px);
+    box-sizing: border-box;
+}
+.node-img-opposite {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.01);
+    display: block;
+}
 .node-date { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--wine-red); margin-bottom: 8px; display: block; }
 .node-card h4 { font-size: 16px; font-weight: 500; margin-bottom: 12px; letter-spacing: -0.2px; }
 .node-card p { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; font-weight: 300; }
@@ -222,8 +267,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 @media (max-width: 768px) {
     .audio-widget { top: auto; bottom: 24px; right: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
     .timeline-track::before { left: 24px; }
-    .timeline-node { width: 100%; left: 0 !important; text-align: left !important; padding-left: 55px; padding-right: 10px; }
-    .node-marker { left: 24px; }
+    .timeline-node {
+        width: 100%;
+        left: 0 !important;
+        text-align: left !important;
+        padding-left: 55px;
+        padding-right: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .node-card,
+    .node-image-container {
+        width: 100% !important;
+    }
+    .node-img-opposite {
+        height: 180px;
+    }
+    .node-marker {
+        left: 24px;
+        top: 40px;
+        transform: translate(-50%, -50%);
+    }
     .masonry-grid { column-count: 2; column-gap: 14px; }
     .section-wrapper { padding: 90px 0; }
     .letter-box { padding: 50px 24px; }
@@ -335,20 +400,7 @@ body {
     padding: 0 !important;
 }
 
-/* Center timeline markers on desktop track line */
 @media (min-width: 769px) {
-    .timeline-node:nth-child(odd) .node-marker {
-        left: auto;
-        right: -20px;
-        transform: translateY(-50%);
-        top: 50px;
-    }
-    .timeline-node:nth-child(even) .node-marker {
-        left: -20px;
-        transform: translateY(-50%);
-        top: 50px;
-    }
-    
     /* Desktop Alternating Zipper Reveal Animations */
     .timeline-node:nth-child(odd).reveal {
         opacity: 0;
@@ -429,6 +481,41 @@ body {
     color: #000000;
     border-color: #ffffff;
 }
+
+/* Timeline Node Image Styles */
+.node-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+}
+
+/* Floating Love Emojis styling */
+.floating-heart {
+    position: fixed;
+    bottom: -50px;
+    z-index: 9999;
+    font-size: clamp(20px, 4vw, 40px);
+    user-select: none;
+    pointer-events: none;
+    animation: floatUp 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-105vh) translateX(var(--sway-x)) rotate(var(--rotate-deg)) scale(var(--scale));
+        opacity: 0;
+    }
+}
 </style>
 </head>
 <body>
@@ -505,6 +592,7 @@ body {
         </div>
         
         <div class="timeline-track">
+          <!-- Odd row: Card Left, Image Right -->
           <div class="timeline-node reveal">
             <div class="node-marker">❤️</div>
             <div class="node-card">
@@ -512,10 +600,17 @@ body {
               <h4>Hari Pertama Kita</h4>
               <p>Awal dari segalanya. Titik balik di mana dua takdir memutuskan untuk menyusuri jalan yang sama.</p>
             </div>
+            <div class="node-image-container">
+              <img src="assets/images/cantik.jpg" alt="Hari Pertama Kita" class="node-img-opposite">
+            </div>
           </div>
 
+          <!-- Even row: Image Left, Card Right -->
           <div class="timeline-node reveal">
             <div class="node-marker">💍</div>
+            <div class="node-image-container">
+              <img src="assets/images/wedding.jpg" alt="Hari Kita Menjadi Keluarga" class="node-img-opposite">
+            </div>
             <div class="node-card">
               <span class="node-date">11 November 2018</span>
               <h4>Hari Kita Menjadi Keluarga</h4>
@@ -523,6 +618,7 @@ body {
             </div>
           </div>
 
+          <!-- Odd row: Card Left, Image Right -->
           <div class="timeline-node reveal">
             <div class="node-marker">🌱</div>
             <div class="node-card">
@@ -530,10 +626,17 @@ body {
               <h4>Banyak Pelajaran & Pertumbuhan</h4>
               <p>Melalui riak gelombang ego, kesalahan, dan dinamika pendewasaan yang menempa kita berdua menjadi pribadi yang lebih kuat.</p>
             </div>
+            <div class="node-image-container">
+              <img src="assets/images/belanda.jpg" alt="Banyak Pelajaran & Pertumbuhan" class="node-img-opposite">
+            </div>
           </div>
 
+          <!-- Even row: Image Left, Card Right -->
           <div class="timeline-node reveal">
             <div class="node-marker">🏡</div>
+            <div class="node-image-container">
+              <img src="assets/images/pregnant.jpg" alt="Until We Find Home Again" class="node-img-opposite">
+            </div>
             <div class="node-card">
               <span class="node-date">Hari Ini</span>
               <h4>Until We Find Home Again</h4>
@@ -805,8 +908,44 @@ function processInvitationResponse(type) {
 
     if (type === 'yes') {
         acceptMsg.classList.add('active');
+        spawnLoveEmojis();
     } else {
         delayMsg.classList.add('active');
+    }
+}
+
+function spawnLoveEmojis() {
+    const emojis = ['❤️', '💖', '💕', '💗', '😍', '🥰', '💝', '✨'];
+    const container = document.body;
+    
+    for (let i = 0; i < 45; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        
+        // Random emoji selection
+        heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        
+        // Random positions and styling variables
+        const leftPos = Math.random() * 100; // 0 to 100%
+        const swayX = (Math.random() - 0.5) * 200; // -100px to 100px
+        const rotateDeg = (Math.random() - 0.5) * 90; // -45deg to 45deg
+        const scale = 0.7 + Math.random() * 0.8; // 0.7 to 1.5
+        const delay = Math.random() * 0.8; // 0s to 0.8s
+        const duration = 2.5 + Math.random() * 1.5; // 2.5s to 4s
+        
+        heart.style.left = `${leftPos}%`;
+        heart.style.setProperty('--sway-x', `${swayX}px`);
+        heart.style.setProperty('--rotate-deg', `${rotateDeg}deg`);
+        heart.style.setProperty('--scale', scale);
+        heart.style.animationDelay = `${delay}s`;
+        heart.style.animationDuration = `${duration}s`;
+        
+        container.appendChild(heart);
+        
+        // Auto remove from DOM after animation completes
+        setTimeout(() => {
+            heart.remove();
+        }, (delay + duration) * 1000);
     }
 }
 
