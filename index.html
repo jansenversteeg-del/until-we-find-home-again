@@ -164,8 +164,26 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 .gallery-card { break-inside: avoid; background: var(--bg-card); border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 4px 20px rgba(0,0,0,0.01); cursor: pointer; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0 4px 20px rgba(0,0,0,0.01); }
 .gallery-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
 .gallery-card img { width: 100%; height: auto; display: block; transition: transform 0.6s ease; }
-.gallery-info { padding: 16px 20px; }
+.gallery-img-wrapper { position: relative; overflow: hidden; }
+.gallery-hint-overlay {
+    position: absolute; inset: 0; background: rgba(0, 0, 0, 0.35);
+    display: flex; align-items: center; justify-content: center; opacity: 0;
+    transition: opacity 0.3s ease; color: #ffffff; font-size: 11px;
+    letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500;
+}
+.gallery-card:hover .gallery-hint-overlay { opacity: 1; }
+.gallery-info {
+    padding: 0 20px; max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, padding 0.4s ease;
+}
 .gallery-info p { font-size: 13px; color: var(--text-muted); font-weight: 300; line-height: 1.4; }
+.gallery-card.show-caption .gallery-info { padding: 16px 20px; max-height: 500px; opacity: 1; }
+
+.typewriter-cursor {
+    display: inline-block; color: var(--gold); font-weight: 400;
+    animation: blinkCursor 0.7s infinite; margin-left: 2px;
+}
+@keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 /* ==========================================================================
    9. INTERSTITIAL QUOTE SECTION
@@ -176,13 +194,42 @@ body{font-family:'Inter',sans-serif;background:var(--bg-warm);color:var(--text-d
 /* ==========================================================================
    10. LIGHTBOX PLATFORM (FULLSCREEN VIEW)
    ========================================================================== */
-.lightbox { position: fixed; inset: 0; background: rgba(252,250,247,0.92); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 11000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+.lightbox {
+    position: fixed; inset: 0; background: rgba(12, 12, 14, 0.78);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    z-index: 11000; display: flex; align-items: center; justify-content: center;
+    padding: 30px; opacity: 0; pointer-events: none; transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
 .lightbox.active { opacity: 1; pointer-events: auto; }
-.lightbox-frame { max-width: 85%; max-height: 75vh; border-radius: 12px; box-shadow: 0 30px 70px rgba(0,0,0,0.08); overflow: hidden; }
-.lightbox-frame img { width: auto; height: auto; max-width: 100%; max-height: 75vh; display: block; object-fit: contain; }
-.lightbox-caption { margin-top: 24px; font-size: 14px; color: var(--text-dark); letter-spacing: 1px; font-weight: 400; text-align: center; }
-.lightbox-close { position: absolute; top: 40px; right: 40px; background: transparent; border: none; font-size: 28px; cursor: pointer; color: var(--text-dark); opacity: 0.6; transition: 0.2s; }
-.lightbox-close:hover { opacity: 1; }
+.lightbox-modal {
+    position: relative; width: min(1050px, 92vw); max-height: 85vh; background: #ffffff;
+    border-radius: 24px; display: flex; flex-direction: row; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
+    transform: scale(0.94) translateY(12px); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.lightbox.active .lightbox-modal { transform: scale(1) translateY(0); }
+.lightbox-close {
+    position: absolute; top: 20px; right: 24px; width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,0,0,0.06); border: none; font-size: 22px; cursor: pointer;
+    color: var(--text-dark); display: flex; align-items: center; justify-content: center;
+    z-index: 10; transition: all 0.25s ease;
+}
+.lightbox-close:hover { background: var(--wine-red); color: #ffffff; transform: scale(1.08); }
+.lightbox-media { flex: 1.2; background: #0b0b0c; display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 380px; }
+.lightbox-media img { width: 100%; height: 100%; max-height: 85vh; object-fit: contain; display: block; }
+.lightbox-content { flex: 1; padding: 50px 40px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; background: #ffffff; }
+.lightbox-tag { font-size: 11px; letter-spacing: 3.5px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 18px; display: block; }
+.lightbox-caption { font-size: clamp(16px, 1.8vw, 19px); line-height: 1.85; color: #2c2c2e; font-weight: 300; text-align: left; }
+
+@media (max-width: 768px) {
+    .lightbox { padding: 16px; }
+    .lightbox-modal { flex-direction: column; max-height: 90vh; width: 100%; border-radius: 20px; }
+    .lightbox-media { flex: none; height: 45vh; min-height: auto; }
+    .lightbox-media img { max-height: 45vh; }
+    .lightbox-content { padding: 24px 20px; max-height: 45vh; }
+    .lightbox-caption { font-size: 15px; line-height: 1.7; }
+    .lightbox-close { top: 14px; right: 14px; background: rgba(255,255,255,0.88); backdrop-filter: blur(10px); }
+}
 
 /* ==========================================================================
    11. PRIVATE LETTER GRAPHICS
@@ -568,7 +615,7 @@ body {
 
 <main>
   <!-- 4. STORY ENTRY BLOCK -->
-  <section id="storyBlock" class="section-wrapper story-section slide-down valign-center">
+  <section id="storyBlock" class="section-wrapper story-section slide-down valign-center" data-typewriter="true">
     <div class="story-section-content">
       <div class="container-narrow">
         <span class="tagline reveal">01 / INTRO</span>
@@ -698,7 +745,7 @@ body {
   </div>
 
   <!-- 9. THE PRIVATE LETTER STAGE -->
-  <section class="section-wrapper letter-area story-section slide-down">
+  <section class="section-wrapper letter-area story-section slide-down" data-typewriter="true">
     <div class="story-section-content">
       <div class="container-narrow">
         <span class="tagline reveal">04 / SURAT UNTUKMU</span>
@@ -746,12 +793,17 @@ body {
 </main>
 
 <!-- 11. LIGHTBOX CONTAINER FOR IMAGES -->
-<div class="lightbox" id="imageLightbox">
-  <button class="lightbox-close" onclick="closeLightboxView()">&times;</button>
-  <div class="lightbox-frame">
-    <img id="lightboxTargetImg" src="" alt="Fullscreen View">
+<div class="lightbox" id="imageLightbox" onclick="if(event.target === this) closeLightboxView()">
+  <div class="lightbox-modal">
+    <button class="lightbox-close" onclick="closeLightboxView()">&times;</button>
+    <div class="lightbox-media">
+      <img id="lightboxTargetImg" src="" alt="Fullscreen View">
+    </div>
+    <div class="lightbox-content">
+      <span class="lightbox-tag">03 / ARSIP MEMORI</span>
+      <p class="lightbox-caption" id="lightboxTargetCaption">Caption Memori</p>
+    </div>
   </div>
-  <div class="lightbox-caption" id="lightboxTargetCaption">Caption Memori</div>
 </div>
 
 <!-- 12. CINEMATIC OUTRO -->
@@ -811,9 +863,9 @@ assetsPhotoPool.forEach((photo, index) => {
     card.className = `gallery-card reveal ${directionClass}`;
     card.onclick = () => openLightboxView(photo.src, photo.cap);
     card.innerHTML = `
-        <img src="${photo.src}" alt="${photo.cap}" loading="lazy">
-        <div class="gallery-info">
-            <p>${photo.cap}</p>
+        <div class="gallery-img-wrapper">
+            <img src="${photo.src}" alt="${photo.cap}" loading="lazy">
+            <div class="gallery-hint-overlay"><span>Click to view story</span></div>
         </div>
     `;
     grid.appendChild(card);
@@ -968,6 +1020,106 @@ document.addEventListener("DOMContentLoaded", () => {
     revealTargets.forEach(target => triggerObserver.observe(target));
 });
 
+// TYPEWRITER ENGINE FOR SLIDE TEXT
+let typingTimeouts = [];
+
+function stopAllTyping() {
+    typingTimeouts.forEach(t => clearTimeout(t));
+    typingTimeouts = [];
+}
+
+function restoreFullText(slideElement) {
+    if (!slideElement) return;
+    stopAllTyping();
+    const targets = slideElement.querySelectorAll('.prose, .letter-paragraph');
+    targets.forEach(el => {
+        if (el.dataset.fullText) {
+            el.innerHTML = el.dataset.fullText;
+        }
+        const cursor = el.querySelector('.typewriter-cursor');
+        if (cursor) cursor.remove();
+    });
+    const nextBtn = slideElement.querySelector('.btn-next-section');
+    if (nextBtn) {
+        nextBtn.style.opacity = '1';
+        nextBtn.style.pointerEvents = 'auto';
+        nextBtn.style.transform = 'translateY(0)';
+    }
+}
+
+function startTypewriter(slideElement) {
+    stopAllTyping();
+    const targets = Array.from(slideElement.querySelectorAll('.prose, .letter-paragraph'));
+    if (targets.length === 0) return;
+
+    // Hide continue button until typing completes
+    const nextBtn = slideElement.querySelector('.btn-next-section');
+    if (nextBtn) {
+        nextBtn.style.opacity = '0';
+        nextBtn.style.pointerEvents = 'none';
+        nextBtn.style.transform = 'translateY(15px)';
+        nextBtn.style.transition = 'opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+    }
+
+    targets.forEach(el => {
+        if (!el.dataset.fullText) {
+            el.dataset.fullText = el.innerHTML;
+        }
+        el.innerHTML = '';
+        el.classList.add('show');
+    });
+
+    let currentTargetIdx = 0;
+
+    function typeNextTarget() {
+        if (currentTargetIdx >= targets.length) {
+            if (nextBtn) {
+                nextBtn.style.opacity = '1';
+                nextBtn.style.pointerEvents = 'auto';
+                nextBtn.style.transform = 'translateY(0)';
+            }
+            return;
+        }
+
+        const el = targets[currentTargetIdx];
+        const fullText = el.dataset.fullText;
+        let charIdx = 0;
+
+        const cursor = document.createElement('span');
+        cursor.className = 'typewriter-cursor';
+        cursor.textContent = '|';
+
+        function typeChar() {
+            if (charIdx < fullText.length) {
+                if (fullText[charIdx] === '<') {
+                    const tagEnd = fullText.indexOf('>', charIdx);
+                    if (tagEnd !== -1) {
+                        charIdx = tagEnd + 1;
+                    } else {
+                        charIdx++;
+                    }
+                } else {
+                    charIdx++;
+                }
+                el.innerHTML = fullText.substring(0, charIdx);
+                el.appendChild(cursor);
+
+                const timeout = setTimeout(typeChar, 22);
+                typingTimeouts.push(timeout);
+            } else {
+                cursor.remove();
+                currentTargetIdx++;
+                const pauseTimeout = setTimeout(typeNextTarget, 150);
+                typingTimeouts.push(pauseTimeout);
+            }
+        }
+
+        typeChar();
+    }
+
+    typeNextTarget();
+}
+
 // I. FULL-PAGE STORY SLIDESHOW SYSTEM
 let currentSlideIndex = 0;
 let isTransitioning = false;
@@ -981,6 +1133,8 @@ function goToSlide(index, direction) {
     
     // Deactivate current slide
     const currentSlide = slides[currentSlideIndex];
+    restoreFullText(currentSlide);
+
     currentSlide.classList.remove('active');
     if (direction === 'next') {
         currentSlide.classList.add('slide-up');
@@ -1007,6 +1161,13 @@ function goToSlide(index, direction) {
     resetRevealsForInactiveSlides();
     triggerRevealsForActiveSlide(nextSlide);
     
+    // Trigger typewriter animation if scrolling from above ('next') on data-typewriter slides
+    if (direction === 'next' && nextSlide.dataset.typewriter === 'true') {
+        startTypewriter(nextSlide);
+    } else {
+        restoreFullText(nextSlide);
+    }
+
     setTimeout(() => {
         isTransitioning = false;
     }, 1200);
